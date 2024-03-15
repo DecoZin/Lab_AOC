@@ -1,0 +1,55 @@
+
+State Machine - |neorv32_test_setup_approm|neorv32_top:neorv32_top_inst|neorv32_busswitch:neorv32_busswitch_inst|arbiter.state
+Name arbiter.state.RETIRE_SWITCHED arbiter.state.BUSY_SWITCHED arbiter.state.RETIRE arbiter.state.BUSY arbiter.state.IDLE 
+arbiter.state.IDLE 0 0 0 0 0 
+arbiter.state.BUSY 0 0 0 1 1 
+arbiter.state.RETIRE 0 0 1 0 1 
+arbiter.state.BUSY_SWITCHED 0 1 0 0 1 
+arbiter.state.RETIRE_SWITCHED 1 0 0 0 1 
+
+State Machine - |neorv32_test_setup_approm|neorv32_top:neorv32_top_inst|neorv32_cpu:neorv32_cpu_inst|neorv32_cpu_alu:neorv32_cpu_alu_inst|neorv32_cpu_cp_muldiv:\neorv32_cpu_cp_muldiv_inst_true:neorv32_cpu_cp_muldiv_inst|state
+Name state.COMPLETED state.FINALIZE state.PROCESSING state.DIV_PREPROCESS state.IDLE 
+state.IDLE 0 0 0 0 0 
+state.DIV_PREPROCESS 0 0 0 1 1 
+state.PROCESSING 0 0 1 0 1 
+state.FINALIZE 0 1 0 0 1 
+state.COMPLETED 1 0 0 0 1 
+
+State Machine - |neorv32_test_setup_approm|neorv32_top:neorv32_top_inst|neorv32_cpu:neorv32_cpu_inst|neorv32_cpu_control:neorv32_cpu_control_inst|debug_ctrl.state
+Name debug_ctrl.state.DEBUG_EXIT debug_ctrl.state.DEBUG_ONLINE debug_ctrl.state.DEBUG_PENDING debug_ctrl.state.DEBUG_OFFLINE 
+debug_ctrl.state.DEBUG_OFFLINE 0 0 0 0 
+debug_ctrl.state.DEBUG_PENDING 0 0 1 1 
+debug_ctrl.state.DEBUG_ONLINE 0 1 0 1 
+debug_ctrl.state.DEBUG_EXIT 1 0 0 1 
+
+State Machine - |neorv32_test_setup_approm|neorv32_top:neorv32_top_inst|neorv32_cpu:neorv32_cpu_inst|neorv32_cpu_control:neorv32_cpu_control_inst|execute_engine.state_prev
+Name execute_engine.state_prev.CSR_ACCESS execute_engine.state_prev.SYS_ENV execute_engine.state_prev.LOADSTORE_2 execute_engine.state_prev.LOADSTORE_1 execute_engine.state_prev.LOADSTORE_0 execute_engine.state_prev.BRANCH execute_engine.state_prev.ALU_WAIT execute_engine.state_prev.EXECUTE execute_engine.state_prev.TRAP_EXECUTE execute_engine.state_prev.TRAP_EXIT execute_engine.state_prev.TRAP_ENTER execute_engine.state_prev.DISPATCH execute_engine.state_prev.SYS_WAIT 
+execute_engine.state_prev.SYS_WAIT 0 0 0 0 0 0 0 0 0 0 0 0 0 
+execute_engine.state_prev.DISPATCH 0 0 0 0 0 0 0 0 0 0 0 1 1 
+execute_engine.state_prev.TRAP_ENTER 0 0 0 0 0 0 0 0 0 0 1 0 1 
+execute_engine.state_prev.TRAP_EXIT 0 0 0 0 0 0 0 0 0 1 0 0 1 
+execute_engine.state_prev.TRAP_EXECUTE 0 0 0 0 0 0 0 0 1 0 0 0 1 
+execute_engine.state_prev.EXECUTE 0 0 0 0 0 0 0 1 0 0 0 0 1 
+execute_engine.state_prev.ALU_WAIT 0 0 0 0 0 0 1 0 0 0 0 0 1 
+execute_engine.state_prev.BRANCH 0 0 0 0 0 1 0 0 0 0 0 0 1 
+execute_engine.state_prev.LOADSTORE_0 0 0 0 0 1 0 0 0 0 0 0 0 1 
+execute_engine.state_prev.LOADSTORE_1 0 0 0 1 0 0 0 0 0 0 0 0 1 
+execute_engine.state_prev.LOADSTORE_2 0 0 1 0 0 0 0 0 0 0 0 0 1 
+execute_engine.state_prev.SYS_ENV 0 1 0 0 0 0 0 0 0 0 0 0 1 
+execute_engine.state_prev.CSR_ACCESS 1 0 0 0 0 0 0 0 0 0 0 0 1 
+
+State Machine - |neorv32_test_setup_approm|neorv32_top:neorv32_top_inst|neorv32_cpu:neorv32_cpu_inst|neorv32_cpu_control:neorv32_cpu_control_inst|execute_engine.state
+Name execute_engine.state.CSR_ACCESS execute_engine.state.SYS_ENV execute_engine.state.LOADSTORE_2 execute_engine.state.LOADSTORE_1 execute_engine.state.LOADSTORE_0 execute_engine.state.BRANCH execute_engine.state.ALU_WAIT execute_engine.state.EXECUTE execute_engine.state.TRAP_EXECUTE execute_engine.state.TRAP_EXIT execute_engine.state.TRAP_ENTER execute_engine.state.DISPATCH execute_engine.state.SYS_WAIT 
+execute_engine.state.SYS_WAIT 0 0 0 0 0 0 0 0 0 0 0 0 0 
+execute_engine.state.DISPATCH 0 0 0 0 0 0 0 0 0 0 0 1 1 
+execute_engine.state.TRAP_ENTER 0 0 0 0 0 0 0 0 0 0 1 0 1 
+execute_engine.state.TRAP_EXIT 0 0 0 0 0 0 0 0 0 1 0 0 1 
+execute_engine.state.TRAP_EXECUTE 0 0 0 0 0 0 0 0 1 0 0 0 1 
+execute_engine.state.EXECUTE 0 0 0 0 0 0 0 1 0 0 0 0 1 
+execute_engine.state.ALU_WAIT 0 0 0 0 0 0 1 0 0 0 0 0 1 
+execute_engine.state.BRANCH 0 0 0 0 0 1 0 0 0 0 0 0 1 
+execute_engine.state.LOADSTORE_0 0 0 0 0 1 0 0 0 0 0 0 0 1 
+execute_engine.state.LOADSTORE_1 0 0 0 1 0 0 0 0 0 0 0 0 1 
+execute_engine.state.LOADSTORE_2 0 0 1 0 0 0 0 0 0 0 0 0 1 
+execute_engine.state.SYS_ENV 0 1 0 0 0 0 0 0 0 0 0 0 1 
+execute_engine.state.CSR_ACCESS 1 0 0 0 0 0 0 0 0 0 0 0 1 
