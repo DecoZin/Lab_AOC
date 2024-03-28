@@ -1,0 +1,16 @@
+Analysis & Synthesis Status : Successful - Mon Mar 25 17:51:48 2024
+Quartus Prime Version : 20.1.0 Build 711 06/05/2020 SJ Lite Edition
+Revision Name : neorv32_top
+Top-level Entity Name : neorv32_test_setup_approm
+Family : MAX 10
+Total logic elements : 3,700
+    Total combinational functions : 3,474
+    Dedicated logic registers : 1,230
+Total registers : 1230
+Total pins : 10
+Total virtual pins : 0
+Total memory bits : 66,560
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 0
+UFM blocks : 0
+ADC blocks : 0

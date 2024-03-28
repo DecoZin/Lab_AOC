@@ -1,0 +1,18 @@
+Fitter Status : Successful - Mon Mar 25 17:52:22 2024
+Quartus Prime Version : 20.1.0 Build 711 06/05/2020 SJ Lite Edition
+Revision Name : neorv32_top
+Top-level Entity Name : neorv32_test_setup_approm
+Family : MAX 10
+Device : 10M50DAF484C7G
+Timing Models : Final
+Total logic elements : 3,572 / 49,760 ( 7 % )
+    Total combinational functions : 3,475 / 49,760 ( 7 % )
+    Dedicated logic registers : 1,230 / 49,760 ( 2 % )
+Total registers : 1230
+Total pins : 10 / 360 ( 3 % )
+Total virtual pins : 0
+Total memory bits : 66,560 / 1,677,312 ( 4 % )
+Embedded Multiplier 9-bit elements : 0 / 288 ( 0 % )
+Total PLLs : 0 / 4 ( 0 % )
+UFM blocks : 0 / 1 ( 0 % )
+ADC blocks : 0 / 2 ( 0 % )
