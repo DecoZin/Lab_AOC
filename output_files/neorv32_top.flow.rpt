@@ -1,5 +1,5 @@
 Flow report for neorv32_top
-Mon Mar 25 17:52:35 2024
+Mon Apr 01 17:12:37 2024
 Quartus Prime Version 20.1.0 Build 711 06/05/2020 SJ Lite Edition
 
 
@@ -41,20 +41,20 @@ https://fpgasoftware.intel.com/eula.
 +----------------------------------------------------------------------------------+
 ; Flow Summary                                                                     ;
 +------------------------------------+---------------------------------------------+
-; Flow Status                        ; Successful - Mon Mar 25 17:52:35 2024       ;
+; Flow Status                        ; Successful - Mon Apr 01 17:12:37 2024       ;
 ; Quartus Prime Version              ; 20.1.0 Build 711 06/05/2020 SJ Lite Edition ;
 ; Revision Name                      ; neorv32_top                                 ;
-; Top-level Entity Name              ; neorv32_test_setup_approm                   ;
+; Top-level Entity Name              ; neorv32_test_setup_bootloader               ;
 ; Family                             ; MAX 10                                      ;
 ; Device                             ; 10M50DAF484C7G                              ;
 ; Timing Models                      ; Final                                       ;
-; Total logic elements               ; 3,572 / 49,760 ( 7 % )                      ;
-;     Total combinational functions  ; 3,475 / 49,760 ( 7 % )                      ;
-;     Dedicated logic registers      ; 1,230 / 49,760 ( 2 % )                      ;
-; Total registers                    ; 1230                                        ;
-; Total pins                         ; 10 / 360 ( 3 % )                            ;
+; Total logic elements               ; 6,020 / 49,760 ( 12 % )                     ;
+;     Total combinational functions  ; 5,885 / 49,760 ( 12 % )                     ;
+;     Dedicated logic registers      ; 1,405 / 49,760 ( 3 % )                      ;
+; Total registers                    ; 1405                                        ;
+; Total pins                         ; 12 / 360 ( 3 % )                            ;
 ; Total virtual pins                 ; 0                                           ;
-; Total memory bits                  ; 66,560 / 1,677,312 ( 4 % )                  ;
+; Total memory bits                  ; 197,632 / 1,677,312 ( 12 % )                ;
 ; Embedded Multiplier 9-bit elements ; 0 / 288 ( 0 % )                             ;
 ; Total PLLs                         ; 0 / 4 ( 0 % )                               ;
 ; UFM blocks                         ; 0 / 1 ( 0 % )                               ;
@@ -67,36 +67,36 @@ https://fpgasoftware.intel.com/eula.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 03/25/2024 17:51:25 ;
+; Start date & time ; 04/01/2024 17:10:43 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; neorv32_top         ;
 +-------------------+---------------------+
 
 
-+--------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Flow Non-Default Global Settings                                                                                                                             ;
-+-------------------------------------+----------------------------------------+---------------+---------------------------+-----------------------------------+
-; Assignment Name                     ; Value                                  ; Default Value ; Entity Name               ; Section Id                        ;
-+-------------------------------------+----------------------------------------+---------------+---------------------------+-----------------------------------+
-; COMPILER_SIGNATURE_ID               ; 2545199679770.171139988527820          ; --            ; --                        ; --                                ;
-; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --                        ; eda_board_design_timing           ;
-; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --                        ; eda_board_design_boundary_scan    ;
-; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --                        ; eda_board_design_signal_integrity ;
-; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --                        ; eda_board_design_symbol           ;
-; EDA_OUTPUT_DATA_FORMAT              ; Vhdl                                   ; --            ; --                        ; eda_simulation                    ;
-; EDA_SIMULATION_TOOL                 ; ModelSim (VHDL)                        ; <None>        ; --                        ; --                                ;
-; EDA_TIME_SCALE                      ; 1 ps                                   ; --            ; --                        ; eda_simulation                    ;
-; MAX_CORE_JUNCTION_TEMP              ; 85                                     ; --            ; --                        ; --                                ;
-; MIN_CORE_JUNCTION_TEMP              ; 0                                      ; --            ; --                        ; --                                ;
-; PARTITION_COLOR                     ; -- (Not supported for targeted family) ; --            ; neorv32_test_setup_approm ; Top                               ;
-; PARTITION_FITTER_PRESERVATION_LEVEL ; -- (Not supported for targeted family) ; --            ; neorv32_test_setup_approm ; Top                               ;
-; PARTITION_NETLIST_TYPE              ; -- (Not supported for targeted family) ; --            ; neorv32_test_setup_approm ; Top                               ;
-; POWER_BOARD_THERMAL_MODEL           ; None (CONSERVATIVE)                    ; --            ; --                        ; --                                ;
-; POWER_PRESET_COOLING_SOLUTION       ; 23 MM HEAT SINK WITH 200 LFPM AIRFLOW  ; --            ; --                        ; --                                ;
-; PROJECT_OUTPUT_DIRECTORY            ; output_files                           ; --            ; --                        ; --                                ;
-; SEARCH_PATH                         ; neorv32                                ; --            ; --                        ; --                                ;
-; TOP_LEVEL_ENTITY                    ; neorv32_test_setup_approm              ; neorv32_top   ; --                        ; --                                ;
-+-------------------------------------+----------------------------------------+---------------+---------------------------+-----------------------------------+
++------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Flow Non-Default Global Settings                                                                                                                                 ;
++-------------------------------------+----------------------------------------+---------------+-------------------------------+-----------------------------------+
+; Assignment Name                     ; Value                                  ; Default Value ; Entity Name                   ; Section Id                        ;
++-------------------------------------+----------------------------------------+---------------+-------------------------------+-----------------------------------+
+; COMPILER_SIGNATURE_ID               ; 2545199679770.171200224309424          ; --            ; --                            ; --                                ;
+; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --                            ; eda_board_design_timing           ;
+; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --                            ; eda_board_design_boundary_scan    ;
+; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --                            ; eda_board_design_signal_integrity ;
+; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --                            ; eda_board_design_symbol           ;
+; EDA_OUTPUT_DATA_FORMAT              ; Vhdl                                   ; --            ; --                            ; eda_simulation                    ;
+; EDA_SIMULATION_TOOL                 ; ModelSim (VHDL)                        ; <None>        ; --                            ; --                                ;
+; EDA_TIME_SCALE                      ; 1 ps                                   ; --            ; --                            ; eda_simulation                    ;
+; MAX_CORE_JUNCTION_TEMP              ; 85                                     ; --            ; --                            ; --                                ;
+; MIN_CORE_JUNCTION_TEMP              ; 0                                      ; --            ; --                            ; --                                ;
+; PARTITION_COLOR                     ; -- (Not supported for targeted family) ; --            ; neorv32_test_setup_bootloader ; Top                               ;
+; PARTITION_FITTER_PRESERVATION_LEVEL ; -- (Not supported for targeted family) ; --            ; neorv32_test_setup_bootloader ; Top                               ;
+; PARTITION_NETLIST_TYPE              ; -- (Not supported for targeted family) ; --            ; neorv32_test_setup_bootloader ; Top                               ;
+; POWER_BOARD_THERMAL_MODEL           ; None (CONSERVATIVE)                    ; --            ; --                            ; --                                ;
+; POWER_PRESET_COOLING_SOLUTION       ; 23 MM HEAT SINK WITH 200 LFPM AIRFLOW  ; --            ; --                            ; --                                ;
+; PROJECT_OUTPUT_DIRECTORY            ; output_files                           ; --            ; --                            ; --                                ;
+; SEARCH_PATH                         ; neorv32                                ; --            ; --                            ; --                                ;
+; TOP_LEVEL_ENTITY                    ; neorv32_test_setup_bootloader          ; neorv32_top   ; --                            ; --                                ;
++-------------------------------------+----------------------------------------+---------------+-------------------------------+-----------------------------------+
 
 
 +--------------------------------------------------------------------------------------------------------------------------+
@@ -104,12 +104,12 @@ https://fpgasoftware.intel.com/eula.
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis ; 00:00:24     ; 1.0                     ; 4870 MB             ; 00:00:24                           ;
-; Fitter               ; 00:00:33     ; 1.4                     ; 5840 MB             ; 00:00:32                           ;
-; Assembler            ; 00:00:03     ; 1.0                     ; 4703 MB             ; 00:00:03                           ;
-; Timing Analyzer      ; 00:00:05     ; 2.3                     ; 4905 MB             ; 00:00:06                           ;
-; EDA Netlist Writer   ; 00:00:01     ; 1.0                     ; 4680 MB             ; 00:00:01                           ;
-; Total                ; 00:01:06     ; --                      ; --                  ; 00:01:06                           ;
+; Analysis & Synthesis ; 00:00:46     ; 1.0                     ; 4888 MB             ; 00:00:38                           ;
+; Fitter               ; 00:00:49     ; 1.6                     ; 5913 MB             ; 00:00:50                           ;
+; Assembler            ; 00:00:04     ; 1.0                     ; 4712 MB             ; 00:00:03                           ;
+; Timing Analyzer      ; 00:00:07     ; 2.7                     ; 4947 MB             ; 00:00:12                           ;
+; EDA Netlist Writer   ; 00:00:02     ; 1.0                     ; 4690 MB             ; 00:00:01                           ;
+; Total                ; 00:01:48     ; --                      ; --                  ; 00:01:44                           ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

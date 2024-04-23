@@ -36,11 +36,19 @@
 					"strict" : false
 				},
 				{
+					"name" : "uart0_txd_o",
+					"strict" : false
+				},
+				{
 					"name" : "clk_i",
 					"strict" : false
 				},
 				{
 					"name" : "rstn_i",
+					"strict" : false
+				},
+				{
+					"name" : "uart0_rxd_i",
 					"strict" : false
 				}
 			]
