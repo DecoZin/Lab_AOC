@@ -8,8 +8,8 @@ use ieee.std_logic_1164.all;
 
 entity extensor is
 	generic (
-		largura_dado  : natural;
-		largura_saida : natural
+		largura_dado  : natural := 16;
+		largura_saida : natural := 32
 	);
 
 	port (
