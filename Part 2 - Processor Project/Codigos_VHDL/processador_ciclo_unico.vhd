@@ -74,7 +74,7 @@ architecture comportamento of processador_ciclo_unico is
 		);
 		port (
 			instrucao : in std_logic_vector(INSTR_WIDTH - 1 downto 0);       -- instrução
-			controle  : out std_logic_vector(DP_CTRL_BUS_WIDTH - 1 downto 0); -- controle da via
+			controle  : out std_logic_vector(DP_CTRL_BUS_WIDTH - 1 downto 0) -- controle da via
 
 			-- Entradas
 			--OPCODE : in std_logic_vector(5 downto 0)
