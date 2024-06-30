@@ -26,7 +26,7 @@ architecture comportamento of processador_ciclo_unico is
 	component via_de_dados_ciclo_unico is
 		generic (
 			-- declare todos os tamanhos dos barramentos (sinais) das portas da sua via_dados_ciclo_unico aqui.
-			DP_CTRL_BUS_WIDTH : natural := 9;  -- tamanho do barramento de controle da via de dados (DP) em bits
+			DP_CTRL_BUS_WIDTH : natural := 12;  -- tamanho do barramento de controle da via de dados (DP) em bits
 			DATA_WIDTH        : natural := 32; -- tamanho do dado em bits
 			PC_WIDTH          : natural := 7;  -- tamanho da entrada de endereços da MI ou MP em bits (memi.vhd)
 			FR_ADDR_WIDTH     : natural := 5;  -- tamanho da linha de endereços do banco de registradores em bits
