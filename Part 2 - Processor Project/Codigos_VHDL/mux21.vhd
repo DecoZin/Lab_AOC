@@ -8,7 +8,7 @@ use ieee.std_logic_1164.all;
 
 entity mux21 is
     generic (
-        largura_dado : natural
+        largura_dado : natural := 32
     );
     port (
         dado_ent_0, dado_ent_1 : in std_logic_vector((largura_dado - 1) downto 0);
