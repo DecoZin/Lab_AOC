@@ -11,8 +11,8 @@ use ieee.numeric_std.all;
 
 entity banco_registradores is
     generic (
-        largura_dado : natural;
-        largura_ende : natural
+        largura_dado : natural := 32;
+        largura_ende : natural := 5
     );
 
     port (
