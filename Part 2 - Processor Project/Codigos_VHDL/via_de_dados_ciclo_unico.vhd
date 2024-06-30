@@ -347,8 +347,7 @@ begin
 
 	instancia_extensor : component extensor
 		port map(
-			entrada_Rs => aux_imm,		
-			extendop   => "0",           -- ??????//				 
+			entrada_Rs => aux_imm,					 
 			saida      => aux_imm_ext
 	   );
 
