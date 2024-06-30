@@ -10,7 +10,7 @@ entity processador_ciclo_unico is
 		DATA_WIDTH        : natural := 32; -- tamanho do barramento de dados em bits
 		PROC_INSTR_WIDTH  : natural := 32; -- tamanho da instrução do processador em bits
 		PROC_ADDR_WIDTH   : natural := 5; -- tamanho do endereço da memória de programa do processador em bits
-		DP_CTRL_BUS_WIDTH : natural := 9 -- tamanho do barramento de controle em bits
+		DP_CTRL_BUS_WIDTH : natural := 12 -- tamanho do barramento de controle em bits
 	);
 	port (
 		--		Chaves_entrada 			: in std_logic_vector(DATA_WIDTH-1 downto 0);
