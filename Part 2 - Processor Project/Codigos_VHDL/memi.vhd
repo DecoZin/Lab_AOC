@@ -9,8 +9,8 @@ use ieee.numeric_std.all;
 
 entity memi is
 	generic (
-		INSTR_WIDTH   : natural; -- tamanho da instrucaoo em numero de bits
-		MI_ADDR_WIDTH : natural  -- tamanho do endereco da memoria de instrucoes em numero de bits
+		INSTR_WIDTH   : natural := 32; -- tamanho da instrucaoo em numero de bits
+		MI_ADDR_WIDTH : natural := 7;  -- tamanho do endereco da memoria de instrucoes em numero de bits
 	);
 	port (
 		clk       : in std_logic;
