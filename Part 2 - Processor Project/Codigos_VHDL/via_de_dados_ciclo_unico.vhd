@@ -10,7 +10,7 @@ use IEEE.std_logic_1164.all;
 entity via_de_dados_ciclo_unico is
 	generic (
 		-- declare todos os tamanhos dos barramentos (sinais) das portas da sua via_dados_ciclo_unico aqui.
-		dp_ctrl_bus_width : natural := 5; -- tamanho do barramento de controle da via de dados (DP) em bits
+		dp_ctrl_bus_width : natural := 12; -- tamanho do barramento de controle da via de dados (DP) em bits
 		data_width        : natural := 32; -- tamanho do dado em bits
 		pc_width          : natural := 7; -- tamanho da entrada de endereços da MI ou MP em bits (memi.vhd)
 		fr_addr_width     : natural := 5; -- tamanho da linha de endereços do banco de registradores em bits
@@ -241,16 +241,22 @@ begin
 	aux_rd_ins    <= instrucao(20 downto 16); -- OP OP OP OP RD RD RD RD RS RS RS RS RT RT RT RT
 	aux_imm       <= instrucao(15 downto 0);
 
-	-- Falta mudar qual bit de controle para cada entrada
-	aux_data_write <= controle(5)
-	aux_reg_write  <= controle(4);            -- WE RW UL UL UL UL
-	aux_ALUCtrl    <= controle(4 downto 0);   -- WE RW UL UL UL UL
-	aux_we         <= controle(5);            -- WE RW UL UL UL UL
-	aux_jumpenable <= controle(5);
-	aux_rsgdst     <= controle(5);
-	aux_alusel     <= controle(5);
-	aux_datatoreg  <= controle(5);
-	aux_branch     <= controle(5);
+	-- Bits de controle para cada entrada
+
+	aux_ALUCtrl    <= controle(4 downto 0);  
+	aux_datatoreg  <= controle(5);	
+	aux_data_write <= controle(6);
+	aux_branch     <= controle(7);
+	aux_alusel     <= controle(8);
+	aux_rsgdst     <= controle(9);
+	aux_reg_write  <= controle(10);  
+	aux_jumpenable <= controle(11);
+	
+	
+	
+	
+
+	
 
 
 
