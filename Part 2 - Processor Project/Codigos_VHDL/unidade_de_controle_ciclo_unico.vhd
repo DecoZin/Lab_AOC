@@ -125,8 +125,8 @@ begin
             
                 -- JMP	
             when "10001" =>
-                ctrl_aux <= "10xx000";
-                ctrl_ula <= "xxxxx";
+                ctrl_aux <= "10x1000";
+                ctrl_ula <= "00000";
             
                 -- JAL	
             when "10010" =>
