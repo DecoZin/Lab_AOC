@@ -158,7 +158,7 @@ begin
 	instancia_unidade_de_controle_ciclo_unico : unidade_de_controle_ciclo_unico
 	port map(
 		instrucao => aux_instrucao, -- instrução
-		controle  => aux_controle,   -- controle da via
+		controle  => aux_controle   -- controle da via
 
 		--OPCODE => aux_OPCODE,
 
@@ -179,7 +179,7 @@ begin
 		reset     => Chave_reset,
 		controle  => aux_controle,
 		instrucao => aux_instrucao,
-		pc_out    => aux_endereco,
+		pc_out    => aux_endereco
 		--saida     => Leds_vermelhos_saida
 	);
 end comportamento;
