@@ -9,7 +9,7 @@ use ieee.numeric_std.all;
 
 entity multiplicador is
     generic (
-        largura_dado : natural
+        largura_dado : natural := 32
     );
 
     port (
