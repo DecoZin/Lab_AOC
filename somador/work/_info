@@ -1,0 +1,90 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/UFMG/Downloads/somador
+Esomador
+Z1 w1639143588
+Z2 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+Z3 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z4 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z5 8somador.vhd
+Z6 Fsomador.vhd
+l0
+L8
+VH>4cH>1O`[nM>0H<Si>bO0
+!s100 ]QNmd6Tkia;eJaYg=61W=1
+Z7 OV;C;10.4b;61
+31
+Z8 !s110 1646056496
+!i10b 1
+Z9 !s108 1646056496.000000
+Z10 !s90 -explicit|-93|somador.vhd|
+Z11 !s107 somador.vhd|
+!i113 1
+Z12 o-explicit -93
+Z13 tExplicit 1
+Afluxo_de_dados
+R2
+R3
+R4
+DEx4 work 7 somador 0 22 H>4cH>1O`[nM>0H<Si>bO0
+l15
+L14
+V3fEeISmLH<`><PB@1bG143
+!s100 k5]]lf_5:[mAkE<PWY[On0
+R7
+31
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 1
+R12
+R13
+Etb_somador
+Z14 w1639049554
+R3
+R4
+R0
+Z15 8tb_somador.vhd
+Z16 Ftb_somador.vhd
+l0
+L4
+VKfbclzUBOH:8TGJJMQJ>[3
+!s100 eYP@6SL?4HV9CnJd`]:nE0
+R7
+31
+R8
+!i10b 1
+R9
+Z17 !s90 -explicit|-93|tb_somador.vhd|
+Z18 !s107 tb_somador.vhd|
+!i113 1
+R12
+R13
+Ateste
+R3
+R4
+Z19 DEx4 work 10 tb_somador 0 22 KfbclzUBOH:8TGJJMQJ>[3
+l16
+L7
+Z20 Vl5]hk:;:9eoN<o9BHW=<J1
+Z21 !s100 @j^<j<`zgY37MT:i2M]Wk2
+R7
+31
+R8
+!i10b 1
+R9
+R17
+R18
+!i113 1
+R12
+R13
