@@ -6,7 +6,6 @@ entity and_port is
     port (
         entrada1   :   in std_logic;
         entrada2   :   in std_logic;
-
         saida   :   out std_logic
     );
 end and_port;

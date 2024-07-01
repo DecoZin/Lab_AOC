@@ -15,9 +15,13 @@ architecture estimulos of tb_processador_ciclo_unico is
 	-- Declarar a unidade sob teste
 	component processador_ciclo_unico
 		port (
-			reset : in std_logic;
-			clk   : in std_logic
-		);
+		-- Chaves_entrada				: in std_logic_vector(DATA_WIDTH-1 downto 0);
+		-- Chave_enter						: in std_logic ;
+		pc_out                : out std_logic_vector(6 downto 0);
+		Leds_vermelhos_saida	: out std_logic_vector(DATA_WIDTH - 1 downto 0);
+		Chave_reset						: in std_logic;
+		Clock									: in std_logic
+	);
 	end component;
 
 	signal clk : std_logic;
