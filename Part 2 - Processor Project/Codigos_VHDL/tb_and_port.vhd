@@ -18,7 +18,7 @@ architecture rtl of tb_and_port is
 
 signal in_a : std_logic := '0';
 signal in_b : std_logic := '0';
-signal out_  : std_logic := '0';
+signal out_1  : std_logic := '0';
 
 begin
 
@@ -26,22 +26,23 @@ begin
     port map (
       entrada1  => in_a,
       entrada2  => in_b,
-      saida     => out_
+      saida     => out_1
     );
 
-  process (in_a, in_b)
+  process
   begin
     in_a <= '0';
+    in_b <= '0';
+    wait for 10 ns;
+    in_a <= '1';
+    in_b <= '0';
+    wait for 10 ns;
+    in_a <= '1';
+    in_b <= '1';
+    wait for 10 ns;
     in_a <= '0';
-    wait 10ns;
-    in_a <= '1';
-    in_a <= '0';
-    wait 10ns;
-    in_a <= '1';
-    in_a <= '1';
-    wait 10ns;
-    in_a <= '0';
-    in_a <= '1';
+    in_b <= '1';
+    wait for 10 ns;
     wait ;
   end process;
 
