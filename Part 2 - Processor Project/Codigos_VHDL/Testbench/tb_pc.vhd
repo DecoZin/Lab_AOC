@@ -49,6 +49,7 @@ process
         wait for 5 ns;
         CLK_tb <= '1';
         wait for 5 ns;
+	wait;
 end process;
 
 
