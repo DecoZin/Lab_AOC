@@ -1,13 +1,13 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use ieee.math_real.all;
 
 entity tb_pc is
 end entity;
 
 architecture rtl of tb_pc is
-
+  constant PC_WIDTH : natural := 7;
+  
   component pc is
     generic (
 		PC_WIDTH : natural:= 7 
@@ -21,7 +21,7 @@ architecture rtl of tb_pc is
 	);
   end component;
 
-signal aux_entrada  : std_logic_vector (PC_WIDTH - 1 downto 0) := '1111111';
+signal aux_entrada  : std_logic_vector (PC_WIDTH - 1 downto 0) := ((others => '1') );
 signal aux_saida    : std_logic_vector (PC_WIDTH - 1 downto 0);
 signal CLK_tb       : std_logic := '0';
 signal aux_we       : std_logic := '1';
@@ -55,11 +55,11 @@ end process;
 
 process
   begin
-    aux_entrada <= '1111111';
+    aux_entrada <= "1111111";
     wait for 10 ns;
-    aux_entrada <= '1000001';
+    aux_entrada <= "1000001";
     wait for 10 ns;
-    aux_entrada <= '1011001';
+    aux_entrada <= "1011001";
     wait for 10 ns;
     aux_reset <= '1';
     wait for 10 ns;
