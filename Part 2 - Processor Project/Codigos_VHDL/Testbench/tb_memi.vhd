@@ -1,12 +1,15 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use ieee.math_real.all;
+--use ieee.math_real.all;
 
 entity tb_memi is
 end entity;
 
 architecture rtl of tb_memi is
+
+  constant INSTR_WIDTH : natural := 32;
+  constant MI_ADDR_WIDTH : natural := 7;
 
   component memi is
     generic (
@@ -40,7 +43,7 @@ begin
 -- Processo de clock
 process
 begin
-    while now < 100 ns loop 
+    while now < 1300 ns loop 
         clk_tb <= '0';
         wait for 5 ns;
         clk_tb <= '1';
@@ -62,11 +65,11 @@ begin
         Endereco_tb <= std_logic_vector(to_unsigned(i, 7));
         wait for 10 ns;
         -- Verificando a saída
-        assert Instrucao_tb = X"0200" or
-               Instrucao_tb = X"4302" or
-               Instrucao_tb = X"C423" or
-               Instrucao_tb = X"2144" or
-               Instrucao_tb = X"0000"
+        assert Instrucao_tb = X"02000200" or
+               Instrucao_tb = X"43024302" or
+               Instrucao_tb = X"C423C423" or
+               Instrucao_tb = X"21442144" or
+               Instrucao_tb = X"00000000"
                report "Valor incorreto na saída Instrucao após " & integer'image(i) & " ciclos."
                severity error;
     end loop;
