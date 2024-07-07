@@ -18,7 +18,7 @@ entity unidade_de_controle_ciclo_unico is
     );
     port (
         instrucao : in std_logic_vector(INSTR_WIDTH - 1 downto 0);          -- instrução
-        controle  : out std_logic_vector(DP_CTRL_BUS_WIDTH - 1 downto 0)    -- controle da via
+        controle  : out std_logic_vector(DP_CTRL_BUS_WIDTH - 1 downto 0);    -- controle da via
         alu_ctrl  : out std_logic_vector(ULA_CTRL_WIDTH - 1 downto 0)       -- Controle da ALU
     );
 end unidade_de_controle_ciclo_unico;
@@ -100,7 +100,7 @@ begin
             
                 -- SW	
             when "01100" =>
-                ctrl_aux <= "00x1010";
+                ctrl_aux <= "0001010";
                 ctrl_ula <= "00000";
             
                 -- DIVC	
@@ -110,28 +110,28 @@ begin
             
                 -- BEQ	
             when "01110" =>
-                ctrl_aux <= "00x1100";
+                ctrl_aux <= "0001100";
                 ctrl_ula <= "01110";
             
                 -- BLT	
             when "01111" =>
-                ctrl_aux <= "00x1100";
+                ctrl_aux <= "0001100";
                 ctrl_ula <= "10000";
             
                 -- BGT	
             when "10000" =>
-                ctrl_aux <= "00x1100";
+                ctrl_aux <= "0001100";
                 ctrl_ula <= "01111";
             
                 -- JMP	
             when "10001" =>
-                ctrl_aux <= "10x1000";
+                ctrl_aux <= "1001000";
                 ctrl_ula <= "00000";
             
                 -- JAL	
             when "10010" =>
-                ctrl_aux <= "111x000";
-                ctrl_ula <= "xxxxx";
+                ctrl_aux <= "1110000";
+                ctrl_ula <= "00000";
             
                 -- ADDC	
             when "10011" =>
@@ -150,12 +150,12 @@ begin
             
                 -- ABS	
             when "10110" =>
-                ctrl_aux <= "010x000";
+                ctrl_aux <= "0100000";
                 ctrl_ula <= "01000";
             
                 -- CONJ	
             when "10111" =>
-                ctrl_aux <= "010x000";
+                ctrl_aux <= "0100000";
                 ctrl_ula <= "01001";
             
             when others =>

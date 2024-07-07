@@ -8,16 +8,16 @@ use ieee.numeric_std.all;
 
 entity memd is
     generic (
-        number_of_words : natural := 134217728; -- número de words que a sua memória é capaz de armazenar
+        number_of_words : natural := 500;--134217728; -- número de words que a sua memória é capaz de armazenar
         MD_DATA_WIDTH   : natural := 32;        -- tamanho da palavra em bits
         MD_ADDR_WIDTH   : natural := 32         -- tamanho do endereco da memoria de dados em bits
     );
     port (
-        clk                 : in std_logic;
-        mem_write : in std_logic; --sinais do controlador
-        write_data_mem      : in std_logic_vector(MD_DATA_WIDTH - 1 downto 0);
-        adress_mem          : in std_logic_vector(MD_ADDR_WIDTH - 1 downto 0);
-        read_data_mem       : out std_logic_vector(MD_DATA_WIDTH - 1 downto 0)
+        clk             : in std_logic;
+        mem_write       : in std_logic; --sinais do controlador
+        write_data_mem  : in std_logic_vector(MD_DATA_WIDTH - 1 downto 0);
+        adress_mem      : in std_logic_vector(MD_ADDR_WIDTH - 1 downto 0);
+        read_data_mem   : out std_logic_vector(MD_DATA_WIDTH - 1 downto 0)
     );
 end memd;
 

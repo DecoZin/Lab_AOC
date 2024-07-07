@@ -24,20 +24,20 @@ architecture rtl of tb_banco_registradores is
     );
   end component;
 
-constant largura_dado : natural := 32;
-constant largura_ende : natural := 5;
+  constant largura_dado : natural := 32;
+  constant largura_ende : natural := 5;
 
-constant clk_period : time := 100 ns;
-constant signal_input_period : time := 200 us;
-signal clk_generator : boolean := true;
-signal clk   : std_logic := '0'; -- 10 MHz
+  constant clk_period : time := 100 ns;
+  constant signal_input_period : time := 200 us;
+  signal clk_generator : boolean := true;
+  signal clk   : std_logic := '0'; -- 10 MHz
 
-signal aux_ent_Rs_ende :  std_logic_vector((largura_ende - 1) downto 0);
-signal aux_ent_Rt_ende :  std_logic_vector((largura_ende - 1) downto 0);
-signal aux_ent_Rd_ende :  std_logic_vector((largura_ende - 1) downto 0);
-signal aux_ent_Rd_dado :  std_logic_vector((largura_dado - 1) downto 0);
-signal aux_sai_Rs_dado :  std_logic_vector((largura_dado - 1) downto 0);
-signal aux_sai_Rt_dado :  std_logic_vector((largura_dado - 1) downto 0);
+  signal aux_ent_Rs_ende :  std_logic_vector((largura_ende - 1) downto 0);
+  signal aux_ent_Rt_ende :  std_logic_vector((largura_ende - 1) downto 0);
+  signal aux_ent_Rd_ende :  std_logic_vector((largura_ende - 1) downto 0);
+  signal aux_ent_Rd_dado :  std_logic_vector((largura_dado - 1) downto 0);
+  signal aux_sai_Rs_dado :  std_logic_vector((largura_dado - 1) downto 0);
+  signal aux_sai_Rt_dado :  std_logic_vector((largura_dado - 1) downto 0);
 
 begin
 
@@ -66,9 +66,17 @@ begin
 
   STIMULUS: process
   begin
-    for i in 0 to 32 loop
+    -- Testing Writing:
+    for i in 0 to 31 loop
       aux_ent_Rd_ende <= std_logic_vector(to_unsigned(i, 5));
       aux_ent_Rd_dado <= std_logic_vector(to_unsigned(i, 32));
+      wait for clk_period;
+    end loop;
+
+    -- Testing Reading:
+    for i in 0 to 31 loop
+      aux_ent_Rs_ende <= std_logic_vector(to_unsigned(i, 5));
+      aux_ent_Rt_ende <= std_logic_vector(to_unsigned(i, 5));
       wait for clk_period;
     end loop;
     wait ;
