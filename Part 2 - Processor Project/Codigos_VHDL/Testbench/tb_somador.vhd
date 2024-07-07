@@ -1,12 +1,14 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use ieee.math_real.all;
+--use ieee.math_real.all;
 
 entity tb_somador is
 end entity;
 
 architecture rtl of tb_somador is
+
+  constant largura_dado : natural := 7;
 
   component somador is
     generic (
@@ -20,9 +22,9 @@ architecture rtl of tb_somador is
 	);
   end component;
 
-signal aux_entrada_a  : std_logic_vector((largura_dado - 1) downto 0) := '0000000';
-signal aux_entrada_b  : std_logic_vector((largura_dado - 1) downto 0) := '0000011';
-signal aux_saida      : std_logic_vector((largura_dado - 1) downto 0)
+signal aux_entrada_a  : std_logic_vector((largura_dado - 1) downto 0) := "0000000";
+signal aux_entrada_b  : std_logic_vector((largura_dado - 1) downto 0) := "0000011";
+signal aux_saida      : std_logic_vector((largura_dado - 1) downto 0);
 
 begin
 
@@ -36,17 +38,17 @@ begin
 
 process
   begin
-    aux_entrada_a <= '0000000';
-    aux_entrada_b <= '0000001';
+    aux_entrada_a <= "0000000";
+    aux_entrada_b <= "0000001";
     wait for 10 ns;
-    aux_entrada_a <= '0000001';
-    aux_entrada_b <= '0000001';
+    aux_entrada_a <= "0000001";
+    aux_entrada_b <= "0000001";
     wait for 10 ns;
-    aux_entrada_a <= '0011000';
-    aux_entrada_b <= '0000011';
+    aux_entrada_a <= "0011000";
+    aux_entrada_b <= "0000011";
     wait for 10 ns;
-    aux_entrada_a <= '0001110';
-    aux_entrada_b <= '1000001';
+    aux_entrada_a <= "0001110";
+    aux_entrada_b <= "1000001";
     wait for 10 ns;
     wait ;
 end process;
