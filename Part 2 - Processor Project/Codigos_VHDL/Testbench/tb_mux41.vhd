@@ -1,13 +1,14 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use ieee.math_real.all;
+--use ieee.math_real.all;
 
 entity tb_mux41 is
 end entity;
 
 architecture rtl of tb_mux41 is
 
+  constant largura_dado : natural := 5;
   component mux41 is
     generic (
         largura_dado : natural := 5
@@ -20,11 +21,11 @@ architecture rtl of tb_mux41 is
     );
   end component;
 
-signal aux_dado_0  : std_logic_vector((largura_dado - 1) downto 0) := '00000';
-signal aux_dado_1  : std_logic_vector((largura_dado - 1) downto 0) := '00001';
-signal aux_dado_2  : std_logic_vector((largura_dado - 1) downto 0) := '00010';
-signal aux_dado_3  : std_logic_vector((largura_dado - 1) downto 0) := '00011';
-signal aux_sel     : std_logic_vector(1 downto 0) := '00';
+signal aux_dado_0  : std_logic_vector((largura_dado - 1) downto 0) := "00000";
+signal aux_dado_1  : std_logic_vector((largura_dado - 1) downto 0) := "00001";
+signal aux_dado_2  : std_logic_vector((largura_dado - 1) downto 0) := "00010";
+signal aux_dado_3  : std_logic_vector((largura_dado - 1) downto 0) := "00011";
+signal aux_sel     : std_logic_vector(1 downto 0) := "00";
 signal aux_out     : std_logic_vector((largura_dado - 1) downto 0);
 
 begin
@@ -41,13 +42,13 @@ begin
 
   process
   begin
-    aux_sel <= '00';
+    aux_sel <= "00";
     wait for 10 ns;
-    aux_sel <= '01';
+    aux_sel <= "01";
     wait for 10 ns;
-    aux_sel <= '10';
+    aux_sel <= "10";
     wait for 10 ns;
-    aux_sel <= '11';
+    aux_sel <= "11";
     wait for 10 ns;
     wait ;
   end process;
