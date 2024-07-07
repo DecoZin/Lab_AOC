@@ -8,6 +8,8 @@ end entity;
 
 architecture rtl of tb_mux21 is
 
+  constant largura_dado : natural := 5;
+
   component mux21 is
     generic (
         largura_dado : natural := 5
@@ -20,8 +22,8 @@ architecture rtl of tb_mux21 is
     );
   end component;
 
-signal aux_dado_0  : std_logic_vector((largura_dado - 1) downto 0) := '00000';
-signal aux_dado_1  : std_logic_vector((largura_dado - 1) downto 0) := '11111';
+signal aux_dado_0  : std_logic_vector((largura_dado - 1) downto 0) := "00000";
+signal aux_dado_1  : std_logic_vector((largura_dado - 1) downto 0) := "11111";
 signal aux_sel     : std_logic := '0';
 signal aux_out     : std_logic_vector((largura_dado - 1) downto 0);
 
