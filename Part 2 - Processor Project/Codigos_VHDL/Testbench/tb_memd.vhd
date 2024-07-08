@@ -10,7 +10,7 @@ architecture rtl of tb_memd is
 
   component memd is
     generic (
-        number_of_words : natural := 134217728; -- número de words que a sua memória é capaz de armazenar
+        number_of_words : natural := 500; -- número de words que a sua memória é capaz de armazenar
         MD_DATA_WIDTH   : natural := 32;        -- tamanho da palavra em bits
         MD_ADDR_WIDTH   : natural := 32         -- tamanho do endereco da memoria de dados em bits
     );
@@ -58,13 +58,13 @@ begin
   begin
     aux_mem_write <= '0';
     wait for clk_period;
-    for i in 0 to 500 loop
+    for i in 0 to 499 loop
       aux_mem_write <= not aux_mem_write;
       aux_write_data_mem <= x"F0F0F0F0";
       aux_adress_mem <= std_logic_vector(to_unsigned(i, 32));
       wait for clk_period;
     end loop;
-    for i in 0 to 500 loop
+    for i in 0 to 499 loop
       aux_mem_write <= '0';
       aux_adress_mem <= std_logic_vector(to_unsigned(i, 32));
       -- if (i rem 2 = 0) then
@@ -78,6 +78,7 @@ begin
       -- end if ;
       wait for clk_period;
     end loop;
+    clk_generator <= false;
     wait;
   end process;
 
