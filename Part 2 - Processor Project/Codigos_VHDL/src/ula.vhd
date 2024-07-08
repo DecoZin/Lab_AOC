@@ -10,8 +10,8 @@ use ieee.numeric_std.all;
 
 entity ula is
     generic (
-        largura_dado : natural := 32;
-        largura_controle : natural := 5
+       constant largura_dado : integer := 32;
+       constant largura_controle : integer := 5
     );
 
     port (
@@ -24,29 +24,33 @@ end ula;
 
 architecture comportamental of ula is
     signal resultado_ula : std_logic_vector((largura_dado - 1) downto 0);
-    signal real_a : signed;
-    signal imag_a : signed;
-    signal real_b : signed;
-    signal imag_b : signed;
-    signal divisor : signed;
-    signal dividendor_real : signed;
-    signal dividendor_imag : signed;
+    signal real_a : signed((largura_dado / 2 - 1) downto 0);
+    signal imag_a : signed((largura_dado / 2 - 1) downto 0);
+    signal real_b : signed((largura_dado / 2 - 1) downto 0);
+    signal imag_b : signed((largura_dado / 2 - 1) downto 0);
+    signal divisor : signed((largura_dado - 1) downto 0);
+    signal dividendor_real : signed((largura_dado - 1) downto 0);
+    signal dividendor_imag : signed((largura_dado - 1) downto 0);
+    signal alu_control : signed(4 downto 0);
+    
 
 begin
     real_a <= signed(entrada_a((largura_dado - 1) downto (largura_dado / 2)));
     imag_a <= signed(entrada_a(((largura_dado / 2) - 1) downto 0));
     real_b <= signed(entrada_b((largura_dado - 1) downto (largura_dado / 2)));
     imag_b <= signed(entrada_b(((largura_dado / 2) - 1) downto 0));
-    process (entrada_a, entrada_b, seletor) is
+    alu_control <= signed(seletor);
+    process (entrada_a, entrada_b, alu_control) is
         -- Variables for square roots
         variable d : unsigned(31 downto 0):=(others => '0'); --original input.
         variable a : unsigned(31 downto 0):=(others => '0'); --input copy.
         variable q : unsigned(15 downto 0):=(others => '0');  --result.
         --'left' and 'right' are inputs to adder/sub. 'r' is remainder.
         variable left,right,r : unsigned(17 downto 0):=(others => '0');  
-        variable i : integer:=0;  --loop index
+        -- variable i : integer:=0;  --loop index
+        
     begin
-        case(seletor) is
+        case(alu_control) is
             when "00000" => -- adição
             resultado_ula <= std_logic_vector(signed(entrada_a) + signed(entrada_b));
             
@@ -92,9 +96,9 @@ begin
                 end if;
                 q := q(14 downto 0) & not r(17);  --left shift and pad msb of 'r'
             end loop;
-            resultado_ula ((largura_dado - 1) downto (largura_dado / 2)) <= q;  --assign output
+            resultado_ula ((largura_dado - 1) downto (largura_dado / 2)) <= std_logic_vector(q);  --assign output
             a := d-q*q;  --calculate remainder manually
-            resultado_ula (((largura_dado / 2) - 1) downto 0) <= a(15 downto 0);  --take only lsb 16 bits for output.
+            resultado_ula (((largura_dado / 2) - 1) downto 0) <= std_logic_vector(a(15 downto 0));  --take only lsb 16 bits for output.
             
             when "01001" => -- conjulgado
             resultado_ula ((largura_dado - 1) downto (largura_dado / 2)) <= std_logic_vector(real_a);
@@ -107,10 +111,10 @@ begin
             resultado_ula <= entrada_a or entrada_b;
             
             when "01100" => -- shift left
-            resultado_ula <= entrada_a sll entrada_b;
+            resultado_ula <= std_logic_vector(unsigned(entrada_a) * (2 ** to_integer(unsigned(entrada_b))));
             
             when "01101" => -- shift right
-            resultado_ula <= entrada_a srl entrada_b;
+            resultado_ula <= std_logic_vector(unsigned(entrada_a) / (2 ** to_integer(unsigned(entrada_b))));
             
             when "01110" => -- igual
             if (entrada_a = entrada_b) then
@@ -134,7 +138,7 @@ begin
             end if;
             
             when others =>
-            resultado_ula <= std_logic_vector(0);
+            resultado_ula <= "00000000000000000000000000000000";
 
         end case;
     end process;

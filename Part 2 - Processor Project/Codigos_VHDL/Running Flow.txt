@@ -1,7 +1,0 @@
-ghdl -a <filename>.vhd <filename>.vhd ...
-
-ghdl -e <top entity name>
-
-ghdl -r <top entity name> --stop-time=<time> --wave=<output filename>.ghw
-
-gtkwave <output filename>.ghw
