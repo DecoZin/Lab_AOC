@@ -25,13 +25,13 @@ architecture rtl of tb_ula is
 	signal sel_in			:	std_logic_vector(4 downto 0);
 	signal out_ula			: 	std_logic_vector(31 downto 0);
 
-	signal a_real			: integer;
-	signal a_imag			: integer;
-	signal b_real			: integer;
-	signal b_imag			: integer;
-	signal divisor			: integer;
-	signal dividendor_real	: integer;
-	signal dividendor_imag	: integer;
+	signal a_real			: integer := 0;
+	signal a_imag			: integer := 0;
+	signal b_real			: integer := 0;
+	signal b_imag			: integer := 0;
+	signal divisor			: integer := 0;
+	signal dividendor_real	: integer := 0;
+	signal dividendor_imag	: integer := 0;
 
 	function sqrt_function (x : integer) return integer is
 		begin
