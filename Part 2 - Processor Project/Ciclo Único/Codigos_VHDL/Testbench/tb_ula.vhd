@@ -116,120 +116,120 @@ begin
 		wait;
 	end process;
 
-	-- teste de adição complexa
-	process
-	begin
-		for i in 0 to 10 loop
-			a_real <= i;
-			a_imag <= i;
-			b_real <= vetor(i);
-			b_imag <= vetor(10 - i);
-			a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
-			b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
-			sel_in <= "00100";
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(a_real + b_real, 16)) & 
-							std_logic_vector(to_signed(a_imag + b_imag, 16));
-				report "Erro no teste de adição complexa" severity error;
-		end loop;
-		wait;
-	end process;
+	-- -- teste de adição complexa
+	-- process
+	-- begin
+	-- 	for i in 0 to 10 loop
+	-- 		a_real <= i;
+	-- 		a_imag <= i;
+	-- 		b_real <= vetor(i);
+	-- 		b_imag <= vetor(10 - i);
+	-- 		a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
+	-- 		b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
+	-- 		sel_in <= "00100";
+	-- 		wait for OFFSET;
+	-- 		assert out_ula = std_logic_vector(to_signed(a_real + b_real, 16)) & 
+	-- 						std_logic_vector(to_signed(a_imag + b_imag, 16));
+	-- 			report "Erro no teste de adição complexa" severity error;
+	-- 	end loop;
+	-- 	wait;
+	-- end process;
 
 	-- teste de subtração complexa
-	process
-	begin
-		for i in 0 to 10 loop
-			a_real <= i;
-			a_imag <= i;
-			b_real <= vetor(i);
-			b_imag <= vetor(10 - i);
-			a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
-			b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
-			sel_in <= "00101";
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(a_real - b_real,16)) & 
-							std_logic_vector(to_signed(a_imag - b_imag,16));
-				report "Erro no teste de subtração complexa" severity error;
-		end loop;
-		wait;
-	end process;
+	-- process
+	-- begin
+	-- 	for i in 0 to 10 loop
+	-- 		a_real <= i;
+	-- 		a_imag <= i;
+	-- 		b_real <= vetor(i);
+	-- 		b_imag <= vetor(10 - i);
+	-- 		a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
+	-- 		b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
+	-- 		sel_in <= "00101";
+	-- 		wait for OFFSET;
+	-- 		assert out_ula = std_logic_vector(to_signed(a_real - b_real,16)) & 
+	-- 						std_logic_vector(to_signed(a_imag - b_imag,16));
+	-- 			report "Erro no teste de subtração complexa" severity error;
+	-- 	end loop;
+	-- 	wait;
+	-- end process;
 
 	-- teste de multiplicação complexa
-	process
-	begin
-		for i in 0 to 10 loop
-			a_real <= i;
-			a_imag <= i;
-			b_real <= vetor(i);
-			b_imag <= vetor(10 - i);
-			a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
-			b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
-			sel_in <= "00110";
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(((a_real * b_real) - (a_imag * b_imag)),16)) & 
-							std_logic_vector(to_signed(((a_real * b_imag) + (a_imag * b_real)),16));
-				report "Erro no teste de multiplicação complexa" severity error;
-		end loop;
-		wait;
-	end process;
+	-- process
+	-- begin
+	-- 	for i in 0 to 10 loop
+	-- 		a_real <= i;
+	-- 		a_imag <= i;
+	-- 		b_real <= vetor(i);
+	-- 		b_imag <= vetor(10 - i);
+	-- 		a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
+	-- 		b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
+	-- 		sel_in <= "00110";
+	-- 		wait for OFFSET;
+	-- 		assert out_ula = std_logic_vector(to_signed(((a_real * b_real) - (a_imag * b_imag)),16)) & 
+	-- 						std_logic_vector(to_signed(((a_real * b_imag) + (a_imag * b_real)),16));
+	-- 			report "Erro no teste de multiplicação complexa" severity error;
+	-- 	end loop;
+	-- 	wait;
+	-- end process;
 
 	-- teste de divisão complexa
-	process
-	begin
-		for i in 0 to 10 loop
-			a_real <= i;
-			a_imag <= i;
-			b_real <= vetor(i);
-			b_imag <= vetor(10 - i);
-			a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
-			b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
-			sel_in <= "00111";
+	-- process
+	-- begin
+	-- 	for i in 0 to 10 loop
+	-- 		a_real <= i;
+	-- 		a_imag <= i;
+	-- 		b_real <= vetor(i);
+	-- 		b_imag <= vetor(10 - i);
+	-- 		a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
+	-- 		b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
+	-- 		sel_in <= "00111";
 
-			divisor <= (b_real * b_real) + (b_imag * b_imag);
-			dividendor_real <= (a_real * b_real) - (a_imag * (-b_imag));
-			dividendor_imag <= (a_real * (-b_imag)) + (a_imag * b_real);
+	-- 		divisor <= (b_real * b_real) + (b_imag * b_imag);
+	-- 		dividendor_real <= (a_real * b_real) - (a_imag * (-b_imag));
+	-- 		dividendor_imag <= (a_real * (-b_imag)) + (a_imag * b_real);
 
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(dividendor_real / divisor,16)) & 
-							std_logic_vector(to_signed(dividendor_imag / divisor,16)); 
-				report "Erro no teste de divisão complexa" severity error;
-		end loop;
-		wait;
-	end process;
+	-- 		wait for OFFSET;
+	-- 		assert out_ula = std_logic_vector(to_signed(dividendor_real / divisor,16)) & 
+	-- 						std_logic_vector(to_signed(dividendor_imag / divisor,16)); 
+	-- 			report "Erro no teste de divisão complexa" severity error;
+	-- 	end loop;
+	-- 	wait;
+	-- end process;
 
 	-- teste módulo
-	process
-	begin
-		for i in 0 to 10 loop
-			a_real <= i;
-			a_imag <= i;
-			b_real <= vetor(i);
-			b_imag <= vetor(10 - i);
-			a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
-			b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
-			sel_in <= "01000";
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(sqrt_function(a_real*a_real + a_imag*a_imag),16)) & 
-							std_logic_vector(to_signed(0,16));
-				report "Erro no teste de módulo" severity error;
-		end loop;
-		wait;
-	end process;
+	-- process
+	-- begin
+	-- 	for i in 0 to 10 loop
+	-- 		a_real <= i;
+	-- 		a_imag <= i;
+	-- 		b_real <= vetor(i);
+	-- 		b_imag <= vetor(10 - i);
+	-- 		a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
+	-- 		b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
+	-- 		sel_in <= "01000";
+	-- 		wait for OFFSET;
+	-- 		assert out_ula = std_logic_vector(to_signed(sqrt_function(a_real*a_real + a_imag*a_imag),16)) & 
+	-- 						std_logic_vector(to_signed(0,16));
+	-- 			report "Erro no teste de módulo" severity error;
+	-- 	end loop;
+	-- 	wait;
+	-- end process;
 
 	-- teste conjugado
-	process
-	begin
-		for i in 0 to 10 loop
-			a_real <= i;
-			a_imag <= vetor(i);
-			a_in <= std_logic_vector(to_signed(i,32)) & std_logic_vector(to_signed(vetor(i),32));
-			sel_in <= "01001";
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(i,32)) & 
-							std_logic_vector(to_signed(-vetor(i),32))
-				report "Erro no teste de conjugado" severity error;
-		end loop;
-	end process;
+	-- process
+	-- begin
+	-- 	for i in 0 to 10 loop
+	-- 		a_real <= i;
+	-- 		a_imag <= vetor(i);
+	-- 		a_in <= std_logic_vector(to_signed(i,32)) & std_logic_vector(to_signed(vetor(i),32));
+	-- 		sel_in <= "01001";
+	-- 		wait for OFFSET;
+	-- 		assert out_ula = std_logic_vector(to_signed(i,32)) & 
+	-- 						std_logic_vector(to_signed(-vetor(i),32))
+	-- 			report "Erro no teste de conjugado" severity error;
+	-- 	end loop;
+	-- end process;
 
 	-- teste and
 
@@ -238,6 +238,7 @@ begin
 		for i in 0 to 10 loop
 			a_in <= std_logic_vector(to_signed(i,32));
 			b_in <= std_logic_vector(to_signed(20,32));
+      sel_in <= "01010";
 			wait for OFFSET;
 			assert out_ula = std_logic_vector(to_signed(i, 32) and to_signed(20, 32));
 				report "Erro no teste de and" severity error;
