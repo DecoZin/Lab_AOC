@@ -26,9 +26,13 @@ end ula;
 architecture comportamental of ula is
   signal resultado_ula : std_logic_vector((largura_dado - 1) downto 0);
   signal alu_control : signed(4 downto 0);
+  signal test1 : std_logic_vector((largura_dado - 1) downto 0) := x"00000000";
+  signal test2 : std_logic_vector((largura_dado - 1) downto 0) := x"FFFFFFFF";
+  signal test_result : std_logic_vector((largura_dado - 1) downto 0) := x"00000000";
 
 begin
   alu_control <= signed(seletor);
+  test_result <= test1 and test2;
   process (entrada_a, entrada_b, alu_control) is
     -- Variables for square roots
     variable d : unsigned(31 downto 0):=(others => '0'); --original input.
