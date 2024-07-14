@@ -25,22 +25,11 @@ architecture rtl of tb_ula is
 	signal sel_in			:	std_logic_vector( 4 downto 0);
 	signal out_ula    : std_logic_vector(31 downto 0);
 
-	signal a_real			: integer := 0;
-	signal a_imag			: integer := 0;
-	signal b_real			: integer := 0;
-	signal b_imag			: integer := 0;
-	signal divisor    : integer := 0;
-	signal dividendor_real	: integer := 0;
-	signal dividendor_imag	: integer := 0;
-
 	function sqrt_function (x : integer) return integer is
 		begin
 			return integer(real(sqrt(real(x))));
 		end function;
 		
-
-
-
 	-- signal flag_read_data  	: std_logic:='0';
 	-- signal flag_write      	: std_logic:='0';
 
@@ -66,13 +55,26 @@ begin
 		
 		-- teste de adicao
 	process
+  	variable a_real   : integer := 0;
+	  variable a_imag   : integer := 0;
+	  variable b_real   : integer := 0;
+	  variable b_imag   : integer := 0;
+    variable divisor  : integer := 0;
+    variable dividendor_real  : integer := 0;
+    variable dividendor_imag  : integer := 0;
+    variable div_result_real : integer := 0;
+    variable div_result_imag : integer := 0;
+
 	begin
 		for i in 0 to 10 loop
 			a_in <= std_logic_vector(to_signed(i,32));
 			b_in <= std_logic_vector(to_signed(vetor(i),32));
 			sel_in <= "00000";
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(i+vetor(i),32)) report "Erro no teste de adicao" severity error;
+      wait for MEIO_OFFSET;			
+      assert out_ula = std_logic_vector(to_signed(i+vetor(i),32)) 
+        report "Erro no teste de adicao" 
+        severity error;
+      wait for MEIO_OFFSET;
 		end loop;
 		wait for OFFSET;
 
@@ -81,8 +83,11 @@ begin
 			a_in <= std_logic_vector(to_signed(i,32));
 			b_in <= std_logic_vector(to_signed(vetor(i),32));
 			sel_in <= "00001";
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(i-vetor(i),32)) report "Erro no teste de subtracao" severity error;
+			wait for MEIO_OFFSET;
+			assert out_ula = std_logic_vector(to_signed(i-vetor(i),32)) 
+        report "Erro no teste de subtracao" 
+        severity error;
+      wait for MEIO_OFFSET;
 		end loop;
 		wait for OFFSET;
 
@@ -91,11 +96,12 @@ begin
 			a_in <= std_logic_vector(to_signed(i,32));
 			b_in <= std_logic_vector(to_signed(vetor(i),32));
 			sel_in <= "00010";
-			wait for OFFSET;
+      wait for MEIO_OFFSET;			
 			assert out_ula = std_logic_vector(to_signed(i*vetor(i),32)) 
-      report "Erro no teste de multiplicacao. Result: "   & integer'image(to_integer(signed(out_ula))) & 
-                                            " Expected: " & integer'image(i*vetor(i))
-      severity error;
+        report "Erro no teste de multiplicacao. Result: "   & integer'image(to_integer(signed(out_ula))) & 
+                                              " Expected: " & integer'image(i*vetor(i))
+        severity error;
+      wait for MEIO_OFFSET;			
 		end loop;
 		wait for OFFSET;
 
@@ -104,132 +110,165 @@ begin
 			a_in <= std_logic_vector(to_signed(i,32));
 			b_in <= std_logic_vector(to_signed(vetor(i),32));
 			sel_in <= "00011";
-			wait for OFFSET; 
+      wait for MEIO_OFFSET;			
       if vetor(i) = 0 then
         assert out_ula = x"FFFFFFFF" 
-        report "Erro no teste de divisao. Result:   " & integer'image(to_integer(signed(out_ula))) & 
-                                        " Expected: " & integer'image(-1)                         
-        severity error;
+          report "Erro no teste de divisao. Result:   " & integer'image(to_integer(signed(out_ula))) & 
+                                          " Expected: " & integer'image(-1)                         
+          severity error;
       else
         assert out_ula = std_logic_vector(to_signed(i/vetor(i),32)) 
-        report "Erro no teste de divisao. Result:   " & integer'image(to_integer(signed(out_ula))) & 
-                                        " Expected: " & integer'image(i/vetor(i))                    
-        severity error;
+          report "Erro no teste de divisao. Result:   " & integer'image(to_integer(signed(out_ula))) & 
+                                          " Expected: " & integer'image(i/vetor(i))                    
+          severity error;
+      wait for MEIO_OFFSET;			
       end if ;
 		end loop;
 		wait for OFFSET;
 
 	-- teste de adicao complexa
 		for i in 0 to 10 loop
-			a_real <= i;
-			a_imag <= i;
-			b_real <= vetor(i);
-			b_imag <= vetor(i);
+			a_real := i;
+			a_imag := i;
+			b_real := vetor(i);
+			b_imag := vetor(i);
 			a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
 			b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
 			sel_in <= "00100";
-			wait for OFFSET;
+      wait for MEIO_OFFSET;			
 			assert out_ula(31 downto 16) = std_logic_vector(to_signed(i + vetor(i), 16)) 
-      report "Erro no teste de adicao complexa, parte Real. Result: "   & integer'image(to_integer(signed(out_ula(31 downto 16)))) & 
-                                                          " Expected: " & integer'image(i + vetor(i))
-      severity error;
+        report "Erro no teste de adicao complexa, parte Real. Result: "   & integer'image(to_integer(signed(out_ula(31 downto 16)))) & 
+                                                            " Expected: " & integer'image(i + vetor(i))
+        severity error;
 			assert out_ula(15 downto  0) = std_logic_vector(to_signed(i + vetor(i), 16)) 
-      report "Erro no teste de adicao complexa, parte Imaginaria. Result: "   & integer'image(to_integer(signed(out_ula(15 downto  0)))) & 
-                                                                " Expected: " & integer'image(i + vetor(i))
-      severity error;
+        report "Erro no teste de adicao complexa, parte Imaginaria. Result: "   & integer'image(to_integer(signed(out_ula(15 downto  0)))) & 
+                                                                  " Expected: " & integer'image(i + vetor(i))
+        severity error;
+      wait for MEIO_OFFSET;			
 		end loop;
 		wait for OFFSET;
 
 	-- teste de subtracao complexa
 		for i in 0 to 10 loop
-			a_real <= i;
-			a_imag <= i;
-			b_real <= vetor(i);
-			b_imag <= vetor(10 - i);
+			a_real := i;
+			a_imag := i;
+			b_real := vetor(i);
+			b_imag := vetor(i);
 			a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
 			b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
 			sel_in <= "00101";
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(a_real - b_real,16)) & 
-							std_logic_vector(to_signed(a_imag - b_imag,16));
-				report "Erro no teste de subtracao complexa" severity error;
+      wait for MEIO_OFFSET;			
+			assert out_ula(31 downto 16) = std_logic_vector(to_signed(i - vetor(i), 16)) 
+        report "Erro no teste de subtracao complexa, parte Real. Result: " & integer'image(to_integer(signed(out_ula(31 downto 16)))) & 
+                                                             " Expected: "  & integer'image(i - vetor(i))
+        severity error;
+			assert out_ula(15 downto  0) = std_logic_vector(to_signed(i - vetor(i), 16)) 
+        report "Erro no teste de subtracao complexa, parte Imaginaria. Result: " & integer'image(to_integer(signed(out_ula(15 downto  0)))) & 
+                                                                   " Expected: "  & integer'image(i - vetor(i))
+        severity error;
+      wait for MEIO_OFFSET;			
 		end loop;
 		wait for OFFSET;
 
 	-- teste de multiplicacao complexa
 		for i in 0 to 10 loop
-			a_real <= i;
-			a_imag <= i;
-			b_real <= vetor(i);
-			b_imag <= vetor(10 - i);
+			a_real := i;
+			a_imag := i;
+			b_real := vetor(i);
+			b_imag := vetor(i);
 			a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
 			b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
 			sel_in <= "00110";
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(((a_real * b_real) - (a_imag * b_imag)),16)) & 
-							std_logic_vector(to_signed(((a_real * b_imag) + (a_imag * b_real)),16));
-				report "Erro no teste de multiplicacao complexa" severity error;
+      wait for MEIO_OFFSET;			
+			assert out_ula(31 downto 16) = std_logic_vector(to_signed((i * vetor(i)) - (i * vetor(i)), 16)) 
+        report "Erro no teste de multiplicacao complexa, parte Real. Result: " & integer'image(to_integer(signed(out_ula(31 downto 16)))) & 
+                                                             " Expected: "  & integer'image((i * vetor(i)) - (i * vetor(i)))
+        severity error;
+			assert out_ula(15 downto  0) = std_logic_vector(to_signed((i * vetor(i)) + (i * vetor(i)), 16)) 
+        report "Erro no teste de multiplicacao complexa, parte Imaginaria. Result: " & integer'image(to_integer(signed(out_ula(15 downto  0)))) & 
+                                                                   " Expected: "  & integer'image((i * vetor(i)) + (i * vetor(i)))
+        severity error;
+      wait for MEIO_OFFSET;			
 		end loop;
 		wait for OFFSET;
 
 	-- teste de divisao complexa
 		for i in 0 to 10 loop
-			a_real <= i;
-			a_imag <= i;
-			b_real <= vetor(i);
-			b_imag <= vetor(10 - i);
+			a_real := i;
+			a_imag := i;
+			b_real := vetor(i);
+			b_imag := vetor(i);
 			a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
 			b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
 			sel_in <= "00111";
 
-			divisor <= (b_real * b_real) + (b_imag * b_imag);
-			dividendor_real <= (a_real * b_real) - (a_imag * (-b_imag));
-			dividendor_imag <= (a_real * (-b_imag)) + (a_imag * b_real);
+			divisor := (b_real * b_real) + (b_imag * b_imag);
+			dividendor_real := (a_real * b_real) - (a_imag * (-b_imag));
+			dividendor_imag := (a_real * (-b_imag)) + (a_imag * b_real);
+      if (divisor = 0) then
+        div_result_real :=  -1;
+        div_result_imag :=  -1;
+      else
+        div_result_real := dividendor_real/divisor;
+        div_result_imag := dividendor_imag/divisor;
+      end if;
 
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(dividendor_real / divisor,16)) & 
-							std_logic_vector(to_signed(dividendor_imag / divisor,16)); 
-				report "Erro no teste de divisao complexa" severity error;
+      wait for MEIO_OFFSET;		
+			assert out_ula(31 downto 16) = std_logic_vector(to_signed(div_result_real, 16))
+        report "Erro no teste de Divisao complexa, parte Real. Result: " & integer'image(to_integer(signed(out_ula(31 downto 16)))) & 
+                                                             " Expected: "  & integer'image(div_result_real)
+        severity error;
+			assert out_ula(15 downto  0) = std_logic_vector(to_signed(div_result_imag, 16)) 
+        report "Erro no teste de Divisao complexa, parte Imaginaria. Result: " & integer'image(to_integer(signed(out_ula(15 downto  0)))) & 
+                                                                   " Expected: "  & integer'image(div_result_imag)
+        severity error;
+      wait for MEIO_OFFSET;			
 		end loop;
 		wait for OFFSET;
 
 	-- teste módulo
 		for i in 0 to 10 loop
-			a_real <= i;
-			a_imag <= i;
-			b_real <= vetor(i);
-			b_imag <= vetor(10 - i);
+			a_real := i;
+			a_imag := i;
+			b_real := vetor(i);
+			b_imag := vetor(i);
 			a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
 			b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
 			sel_in <= "01000";
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(sqrt_function(a_real*a_real + a_imag*a_imag),16)) & 
-							std_logic_vector(to_signed(0,16));
-				report "Erro no teste de módulo" severity error;
+      wait for MEIO_OFFSET;			
+			assert out_ula(31 downto 16) = std_logic_vector(to_signed(sqrt_function(a_real*a_real + a_imag*a_imag),16))
+				report "Erro no teste de modulo complexa. Result: " & integer'image(to_integer(signed(out_ula(31 downto  16)))) & 
+                                              " Expected: "  & integer'image(sqrt_function(a_real*a_real + a_imag*a_imag))
+        severity error;
+      wait for MEIO_OFFSET;			
 		end loop;
 		wait for OFFSET;
 
 	-- teste conjugado
 		for i in 0 to 10 loop
-			a_real <= i;
-			a_imag <= vetor(i);
-			a_in <= std_logic_vector(to_signed(i,32)) & std_logic_vector(to_signed(vetor(i),32));
+			a_real := i;
+			a_imag := vetor(i);
+			a_in <= std_logic_vector(to_signed(i,16)) & std_logic_vector(to_signed(vetor(i),16));
 			sel_in <= "01001";
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(i,32)) & 
-							std_logic_vector(to_signed(-vetor(i),32))
-				report "Erro no teste de conjugado" severity error;
+      wait for MEIO_OFFSET;			
+			assert out_ula = std_logic_vector(to_signed(i,16)) & 
+							std_logic_vector(to_signed(-vetor(i),16))
+				report "Erro no teste de conjugado" 
+        severity error;
+      wait for MEIO_OFFSET;			
 		end loop;
 		wait for OFFSET;
 
 	-- teste and
 		for i in 0 to 10 loop
 			a_in <= std_logic_vector(to_signed(i,32));
-			b_in <= std_logic_vector(to_signed(20,32));
+			b_in <= std_logic_vector(to_signed(vetor(i),32));
       sel_in <= "01010";
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(i, 32) and to_signed(20, 32));
-				report "Erro no teste de and" severity error;
+      wait for MEIO_OFFSET;			
+			assert out_ula = std_logic_vector(to_signed(i, 32)) and std_logic_vector(to_signed(vetor(i), 32));
+				report "Erro no teste de and" 
+        severity error;
+      wait for MEIO_OFFSET;			
 		end loop;
 		wait for OFFSET;
 
@@ -238,9 +277,11 @@ begin
 			a_in <= std_logic_vector(to_signed(i,32));
 			b_in <= std_logic_vector(to_signed(20,32));
 			sel_in <= "01011";
-			wait for OFFSET;
-			assert out_ula = std_logic_vector(to_signed(i, 32) or to_signed(20, 32));
-				report "Erro no teste de or" severity error;
+      wait for MEIO_OFFSET;			
+			assert out_ula = std_logic_vector(to_signed(i, 32)) or std_logic_vector(to_signed(20, 32));
+				report "Erro no teste de or" 
+        severity error;
+      wait for MEIO_OFFSET;			
 		end loop;
 		wait;
 	end process;
