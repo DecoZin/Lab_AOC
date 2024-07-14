@@ -25,10 +25,6 @@ end ula;
 
 architecture comportamental of ula is
   signal resultado_ula : std_logic_vector((largura_dado - 1) downto 0);
-  signal real_a : signed((largura_dado / 2 - 1) downto 0);
-  signal imag_a : signed((largura_dado / 2 - 1) downto 0);
-  signal real_b : signed((largura_dado / 2 - 1) downto 0);
-  signal imag_b : signed((largura_dado / 2 - 1) downto 0);
   signal divisor : signed((largura_dado - 1) downto 0);
   signal dividendor_real : signed((largura_dado - 1) downto 0);
   signal dividendor_imag : signed((largura_dado - 1) downto 0);
@@ -36,10 +32,6 @@ architecture comportamental of ula is
     
 
 begin
-  real_a <= signed(entrada_a((largura_dado - 1) downto (largura_dado / 2)));
-  imag_a <= signed(entrada_a(((largura_dado / 2) - 1) downto 0));
-  real_b <= signed(entrada_b((largura_dado - 1) downto (largura_dado / 2)));
-  imag_b <= signed(entrada_b(((largura_dado / 2) - 1) downto 0));
   alu_control <= signed(seletor);
   process (entrada_a, entrada_b, alu_control) is
     -- Variables for square roots
@@ -51,38 +43,46 @@ begin
     -- variable i : integer:=0;  --loop index
     variable aux_mul    : std_logic_vector(63 downto 0);
     variable aux_mul_c  : std_logic_vector(31 downto 0);
+    variable real_a     : signed((largura_dado / 2 - 1) downto 0);
+    variable imag_a     : signed((largura_dado / 2 - 1) downto 0);
+    variable real_b     : signed((largura_dado / 2 - 1) downto 0);
+    variable imag_b     : signed((largura_dado / 2 - 1) downto 0);
 
   begin
-    case(alu_control) is
-        when "00000" => -- adição
-        resultado_ula <= std_logic_vector(signed(entrada_a) + signed(entrada_b));
-        
-        when "00001" => -- subtração
-        resultado_ula <= std_logic_vector(signed(entrada_a) - signed(entrada_b));
-        
-        when "00010" => -- multiplicação
-        aux_mul := std_logic_vector(signed(entrada_a) * signed(entrada_b));
-        resultado_ula <= aux_mul(31 downto 0);
-        
-        when "00011" => -- divisão
-        if entrada_b = x"00000000" then
-          resultado_ula <= x"FFFFFFFF";
-        else
-          resultado_ula <= std_logic_vector(signed(entrada_a) / signed(entrada_b));
-        end if ;
-        
-        when "00100" => -- adição complexa
-        resultado_ula ((largura_dado - 1) downto (largura_dado / 2)) <= std_logic_vector(real_a + real_b);
-        resultado_ula (((largura_dado / 2) - 1) downto 0)            <= std_logic_vector(imag_a + imag_b);
-        
-        when "00101" => -- subtração complexa
-        resultado_ula ((largura_dado - 1) downto (largura_dado / 2)) <= std_logic_vector(real_a - real_b);
-        resultado_ula (((largura_dado / 2) - 1) downto 0)            <= std_logic_vector(imag_a - imag_b);
+    real_a := signed(entrada_a((largura_dado - 1) downto (largura_dado / 2)));
+    imag_a := signed(entrada_a(((largura_dado / 2) - 1) downto 0));
+    real_b := signed(entrada_b((largura_dado - 1) downto (largura_dado / 2)));
+    imag_b := signed(entrada_b(((largura_dado / 2) - 1) downto 0));
 
-        when "00110" => -- multiplicação complexa
-        resultado_ula ((largura_dado - 1) downto (largura_dado / 2)) <= std_logic_vector((real_a * real_b) - (imag_a * imag_b));
-        resultado_ula (((largura_dado / 2) - 1) downto 0)            <= std_logic_vector((real_a * imag_b) + (imag_a * real_b));
-        
+    case(alu_control) is
+      when "00000" => -- adição
+      resultado_ula <= std_logic_vector(signed(entrada_a) + signed(entrada_b));
+      
+      when "00001" => -- subtração
+      resultado_ula <= std_logic_vector(signed(entrada_a) - signed(entrada_b));
+      
+      when "00010" => -- multiplicação
+      aux_mul := std_logic_vector(signed(entrada_a) * signed(entrada_b));
+      resultado_ula <= aux_mul(31 downto 0);
+      
+      when "00011" => -- divisão
+      if entrada_b = x"00000000" then
+        resultado_ula <= x"FFFFFFFF";
+      else
+        resultado_ula <= std_logic_vector(signed(entrada_a) / signed(entrada_b));
+      end if ;
+      
+      when "00100" => -- adição complexa
+      resultado_ula <= std_logic_vector(real_a + real_b) & std_logic_vector(imag_a + imag_b);
+      
+      when "00101" => -- subtração complexa
+      resultado_ula ((largura_dado - 1) downto (largura_dado / 2)) <= std_logic_vector(real_a - real_b);
+      resultado_ula (((largura_dado / 2) - 1) downto 0)            <= std_logic_vector(imag_a - imag_b);
+
+      when "00110" => -- multiplicação complexa
+      resultado_ula ((largura_dado - 1) downto (largura_dado / 2)) <= std_logic_vector((real_a * real_b) - (imag_a * imag_b));
+      resultado_ula (((largura_dado / 2) - 1) downto 0)            <= std_logic_vector((real_a * imag_b) + (imag_a * real_b));
+      
         when "00111" => -- divisão complexa
         divisor <= (real_b * real_b) + (imag_b * imag_b);
         dividendor_real <= (real_a * real_b) - (imag_a * (-imag_b));

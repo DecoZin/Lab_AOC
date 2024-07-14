@@ -124,18 +124,18 @@ begin
 			a_real <= i;
 			a_imag <= i;
 			b_real <= vetor(i);
-			b_imag <= vetor(10 - i);
+			b_imag <= vetor(i);
 			a_in <= std_logic_vector(to_signed(a_real,16)) & std_logic_vector(to_signed(a_imag,16));
 			b_in <= std_logic_vector(to_signed(b_real,16)) & std_logic_vector(to_signed(b_imag,16));
 			sel_in <= "00100";
 			wait for OFFSET;
-			assert out_ula(31 downto 16) = std_logic_vector(to_signed(a_real + b_real, 16)) 
+			assert out_ula(31 downto 16) = std_logic_vector(to_signed(i + vetor(i), 16)) 
       report "Erro no teste de adicao complexa, parte Real. Result: "   & integer'image(to_integer(signed(out_ula(31 downto 16)))) & 
-                                                          " Expected: " & integer'image(a_real + b_real)
+                                                          " Expected: " & integer'image(i + vetor(i))
       severity error;
-			assert out_ula(15 downto  0) = std_logic_vector(to_signed(a_imag + b_imag, 16)) 
+			assert out_ula(15 downto  0) = std_logic_vector(to_signed(i + vetor(i), 16)) 
       report "Erro no teste de adicao complexa, parte Imaginaria. Result: "   & integer'image(to_integer(signed(out_ula(15 downto  0)))) & 
-                                                                " Expected: " & integer'image(a_imag + b_imag)
+                                                                " Expected: " & integer'image(i + vetor(i))
       severity error;
 		end loop;
 		wait for OFFSET;
