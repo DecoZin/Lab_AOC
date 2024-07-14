@@ -12,12 +12,10 @@ entity reg_execute is
         largura_banco : natural := 5
     );
     port (
-        branch_in      : in std_logic;
         addr_in        : in std_logic_vector((largura_dado - 1) downto 0);
         data_in        : in std_logic_vector((largura_dado - 1) downto 0);
         reg_dst_in     : in std_logic_vector((largura_banco - 1) downto 0);
         WE, clk, reset : in std_logic;
-        branch_out     : out std_logic;
         addr_out       : out std_logic_vector((largura_dado - 1) downto 0);
         data_out       : out std_logic_vector((largura_dado - 1) downto 0);
         reg_dst_out    : out std_logic_vector((largura_banco - 1) downto 0)
@@ -30,13 +28,11 @@ begin
     begin
         if (rising_edge(clk)) then
             if (WE = '1') then
-                branch_out  <= branch_in;
                 addr_out    <= addr_in;
                 data_out    <= data_in;
                 reg_dst_out <= reg_dst_in;
             end if;
             if (reset = '1') then
-                branch_out  <= (others =>'0'); 
                 addr_out    <= (others =>'0');
                 data_out    <= (others =>'0');
                 reg_dst_out <= (others =>'0');
