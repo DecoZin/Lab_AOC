@@ -342,8 +342,8 @@ begin
       end if;
       wait for MEIO_OFFSET;			
 			assert out_ula = aux_op
-				report "Erro no teste de or. Result: " & integer'image(to_integer(signed(out_ula(31 downto  0)))) & 
-                                              " Expected: " & integer'image(to_integer(signed(aux_op)))
+				report "Erro no teste de or. Result: " & integer'image(to_integer(signed(out_ula))) & 
+                                 " Expected: " & integer'image(to_integer(signed(aux_op)))
         severity error;
       wait for MEIO_OFFSET;			
 		end loop;
@@ -355,7 +355,7 @@ begin
 			a_in <= std_logic_vector(to_signed(i,32));
 			b_in <= std_logic_vector(to_signed(vetor(i),32));
 			sel_in <= "01110";
-			if (a_in = b_in) then
+			if (i = vetor(i)) then
 				aux_op := x"FFFFFFFF";
 			else
 				aux_op := x"00000000";
@@ -364,7 +364,7 @@ begin
       wait for MEIO_OFFSET;			
 			assert out_ula = aux_op
 				report "Erro no teste de igual. Result: " & integer'image(to_integer(signed(out_ula))) & 
-                                              " Expected: " & integer'image(to_integer(signed(aux_op)))
+                                    " Expected: " & integer'image(to_integer(signed(aux_op)))
         severity error;
       wait for MEIO_OFFSET;			
 		end loop;
@@ -376,7 +376,7 @@ begin
 			b_in <= std_logic_vector(to_signed(vetor(i),32));
 			sel_in <= "01111";
 
-			if (a_in > b_in) then
+			if (i > vetor(i)) then
 				aux_op := x"FFFFFFFF";
 			else
 				aux_op := x"00000000";
@@ -384,8 +384,8 @@ begin
 
       wait for MEIO_OFFSET;			
 			assert out_ula = aux_op
-				report "Erro no teste de maior que. Result: " & integer'image(to_integer(signed(out_ula(31 downto  0)))) & 
-                                              " Expected: " & integer'image(to_integer(signed(aux_op)))
+				report "Erro no teste de maior que. Result: " & integer'image(to_integer(signed(out_ula))) & 
+                                        " Expected: " & integer'image(to_integer(signed(aux_op)))
         severity error;
       wait for MEIO_OFFSET;			
 		end loop;
@@ -397,7 +397,7 @@ begin
 			b_in <= std_logic_vector(to_signed(vetor(i),32));
 			sel_in <= "10000";
 
-			if (a_in < b_in) then
+			if (i < vetor(i)) then
 				aux_op := x"FFFFFFFF";
 			else
 				aux_op := x"00000000";

@@ -162,14 +162,14 @@ begin
       end if;
 
       when "01111" => -- maior que
-      if (entrada_a > entrada_b) then
+      if (signed(entrada_a) > signed(entrada_b)) then
           resultado_ula <= x"FFFFFFFF";
       else
           resultado_ula <= x"00000000";
       end if;
       
       when "10000" => -- menor que
-      if (entrada_a < entrada_b) then
+      if (signed(entrada_a) < signed(entrada_b)) then
           resultado_ula <= x"FFFFFFFF";
       else
           resultado_ula <= x"00000000";
