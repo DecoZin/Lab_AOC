@@ -23,36 +23,47 @@ architecture estimulos of tb_processador_ciclo_unico is
 		Clock									: in std_logic
 	);
 	end component;
-
+  
 	signal clk : std_logic;
 	signal rst : std_logic;
+  signal aux_pc_out   : std_logic_vector(6 downto 0) ;
+  signal aux_leds_out : std_logic_vector(DATA_WIDTH -1 downto 0) ;  
 
 	-- Definição das configurações de clock				
-	constant PERIODO    : time := 20 ns;
-	constant DUTY_CYCLE : real := 0.5;
-	constant OFFSET     : time := 5 ns;
+  constant clk_period : time := 10 ns;
+  signal clk_generator : boolean := true;
+  signal clk   : std_logic := '0'; 
+  
 begin
 	-- instancia o componente 
-	instancia : processador_ciclo_unico port map(clk => clk, reset => rst);
+	instancia : processador_ciclo_unico 
+  port map(
+    pc_out => aux_pc_out, 
+    Leds_vermelhos_saida => aux_leds_out, 
+    clk => clk, 
+    reset => rst
+  );
 	-- processo para gerar o sinal de clock 		
-	gera_clock : process
-	begin
-		wait for OFFSET;
-		CLOCK_LOOP : loop
-			clk <= '0';
-			wait for (PERIODO - (PERIODO * DUTY_CYCLE));
-			clk <= '1';
-			wait for (PERIODO * DUTY_CYCLE);
-		end loop CLOCK_LOOP;
-	end process gera_clock;
-	-- processo para gerar o estimulo de reset		
-	gera_reset : process
+CLOCK_GENERATOR: process
+  begin
+    while (clk_generator) loop
+      clk <= '0';
+      wait for clk_period/2;
+      clk <= '1';
+      wait for clk_period/2;
+    end loop;
+    wait;
+  end process;
+  
+  -- processo para gerar o estimulo de reset		
+	STIMULUS : process
 	begin
 		rst <= '0';
-		for i in 1 to 2 loop
+		for i in 1 to 50 loop
 			wait until rising_edge(clk);
 		end loop;
 		rst <= '0';
+    clk_generator <= false;
 		wait;
-	end process gera_reset;
+	end process;
 end;

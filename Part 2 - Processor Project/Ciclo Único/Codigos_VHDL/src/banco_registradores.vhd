@@ -32,10 +32,18 @@ architecture comportamental of banco_registradores is
 begin
     leitura : process (clk) is
     begin
-        -- lê o registrador de endereço Rs da instrução apontada por PC no ciclo anterior,
-        -- lê o registrador de endereço Rt da instrução apontada por PC no ciclo anterior.
+      -- lê o registrador de endereço Rs da instrução apontada por PC no ciclo anterior,
+      -- lê o registrador de endereço Rt da instrução apontada por PC no ciclo anterior.
+      if (ent_Rs_ende = "00000") then
+        sai_Rs_dado <= x"00000000";
+      else
         sai_Rs_dado <= banco(to_integer(unsigned(ent_Rs_ende)));
+      end if;
+      if (ent_Rt_ende = "00000") then
+        sai_Rt_dado <= x"00000000";
+      else
         sai_Rt_dado <= banco(to_integer(unsigned(ent_Rt_ende)));
+      end if;
     end process;
 
     escrita : process (clk) is
