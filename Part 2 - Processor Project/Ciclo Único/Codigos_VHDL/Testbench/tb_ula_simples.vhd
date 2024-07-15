@@ -304,14 +304,13 @@ begin
           aux_op    := aux_op_64(31 downto 0);
         end if;
       else
-        if (to_signed(vetor(i), 32) < -32) then
+        if (-(to_signed(vetor(i), 32)) > 32) then
         aux_op := x"00000000";
         else
-          aux_op_64 := std_logic_vector(to_signed(i,32) / (2 ** (-vetor(i))));
-          aux_op    := aux_op_64(31 downto 0);
+          aux_op := std_logic_vector(to_signed(i,32) / (2 ** (-vetor(i))));
+          -- aux_op    := aux_op_64(31 downto 0);
         end if;
       end if;
-      
       wait for MEIO_OFFSET;			
 			assert out_ula = aux_op
 				report "Erro no teste de or. Result: " & integer'image(to_integer(signed(out_ula(31 downto  0)))) & 
@@ -325,8 +324,22 @@ begin
 		for i in 0 to 10 loop
 			a_in <= std_logic_vector(to_signed(i,32));
 			b_in <= std_logic_vector(to_signed(vetor(i),32));
-			sel_in <= "01011";
-      aux_op := std_logic_vector(to_signed(i,32)) or std_logic_vector(to_signed(vetor(i),32));
+			sel_in <= "01101";
+      if (vetor(i) < 0) then
+        if (to_signed(vetor(i), 32) < -32) then
+        aux_op := x"00000000";
+        else
+          aux_op_64 := std_logic_vector(to_signed(i,32) * (2 ** (-vetor(i))));
+          aux_op    := aux_op_64(31 downto 0);
+        end if;
+      else
+        if (to_signed(vetor(i), 32) > 32) then
+        aux_op := x"00000000";
+        else
+          aux_op := std_logic_vector(to_signed(i,32) / (2 ** vetor(i)));
+          -- aux_op    := aux_op_64(31 downto 0);
+        end if;
+      end if;
       wait for MEIO_OFFSET;			
 			assert out_ula = aux_op
 				report "Erro no teste de or. Result: " & integer'image(to_integer(signed(out_ula(31 downto  0)))) & 

@@ -129,17 +129,31 @@ begin
           resultado_ula <= aux_op_64(31 downto 0);
         end if;
       else
-        if (to_integer(signed(entrada_b)) > 32) then
+        if (to_integer(signed(entrada_b)) < -32) then
         resultado_ula <= x"00000000";
         else
-          aux_op_64 := std_logic_vector(signed(entrada_a) / (2 ** (-to_integer(signed(entrada_b)))));
-          resultado_ula <= aux_op_64(31 downto 0);
+          resultado_ula <= std_logic_vector(signed(entrada_a) / (2 ** (-to_integer(signed(entrada_b)))));
+          -- resultado_ula <= aux_op_64(31 downto 0);
         end if;
       end if;
             
       when "01101" => -- shift right
-      resultado_ula <= std_logic_vector(unsigned(entrada_a) / (2 ** to_integer(unsigned(entrada_b))));
-      
+      if (to_integer(signed(entrada_b)) < 0) then
+        if (to_integer(signed(entrada_b)) < -32) then
+        resultado_ula <= x"00000000";
+        else
+          aux_op_64 := std_logic_vector(signed(entrada_a) * (2 ** (-to_integer(signed(entrada_b)))));
+          resultado_ula <= aux_op_64(31 downto 0);
+        end if;
+      else
+        if (to_integer(signed(entrada_b)) > 32) then
+        resultado_ula <= x"00000000";
+        else
+          resultado_ula <= std_logic_vector(signed(entrada_a) / (2 ** (to_integer(signed(entrada_b)))));
+          -- resultado_ula <= aux_op_64(31 downto 0);
+        end if;
+      end if;     
+       
       when "01110" => -- igual
       if (entrada_a = entrada_b) then
           resultado_ula <= x"FFFFFFFF";
