@@ -98,28 +98,6 @@ architecture comportamento of via_de_dados_ciclo_unico is
 		);
 	end component;
 
-	component mux21_7bits is
-		generic (
-			largura_dado : natural := 7
-		);
-		port (
-			dado_ent_0, dado_ent_1 : in std_logic_vector((largura_dado - 1) downto 0);
-			sele_ent               : in std_logic;
-			dado_sai               : out std_logic_vector((largura_dado - 1) downto 0)
-		);
-	end component;
-
-	component mux21_5bits is
-		generic (
-			largura_dado : natural := 5
-		);
-		port (
-			dado_ent_0, dado_ent_1 : in std_logic_vector((largura_dado - 1) downto 0);
-			sele_ent               : in std_logic;
-			dado_sai               : out std_logic_vector((largura_dado - 1) downto 0)
-		);
-	end component;
-
 	component and_port is
 		port (
 			entrada1   :   in std_logic;
@@ -258,7 +236,10 @@ begin
 	
 	aux_pc_reg <= aux_data_outrs (6 downto 0);
 
-	instancia_mux2 : component mux21_7bits
+	instancia_mux2 : component mux21
+		generic map(
+			largura_dado : natural := 7
+		);
 		port map(
 			dado_ent_0 => aux_pc_mux,
 			dado_ent_1 => aux_pc_reg,
@@ -302,7 +283,10 @@ begin
 			we					=> aux_reg_write
 		);
 
-	instancia_muxDst : component mux21_5bits
+	instancia_muxDst : component mux21
+		generic map(
+			largura_dado : natural := 5
+		)
 		port map(
 			dado_ent_0 => aux_rd_ins,
 			dado_ent_1 => "00000", ---Endereço de ra
@@ -317,6 +301,9 @@ begin
 		);
 
 	instancia_muxDst : component mux21
+		generic map(
+			largura_dado : natural := 32
+		)
 		port map(
 			dado_ent_0 => aux_data_outrt,
 			dado_ent_1 => aux_imm_ext,
