@@ -14,11 +14,23 @@ entity reg_execute is
     port (
         addr_in        : in std_logic_vector((largura_dado - 1) downto 0);
         data_in        : in std_logic_vector((largura_dado - 1) downto 0);
+
+        RegWriteE      : in std_logic;
+        MemtoRegE      : in std_logic;
+        MemWriteE      : in std_logic;
+        BranchE        : in std_logic;
+
         reg_dst_in     : in std_logic_vector((largura_banco - 1) downto 0);
         WE, clk, reset : in std_logic;
         addr_out       : out std_logic_vector((largura_dado - 1) downto 0);
         data_out       : out std_logic_vector((largura_dado - 1) downto 0);
-        reg_dst_out    : out std_logic_vector((largura_banco - 1) downto 0)
+        reg_dst_out    : out std_logic_vector((largura_banco - 1) downto 0);
+
+        RegWriteM      : out std_logic;
+        MemtoRegM      : out std_logic;
+        MemWriteM      : out std_logic;
+        BranchM        : out std_logic
+
     );
 end reg_execute;
 
@@ -31,12 +43,22 @@ begin
                 addr_out    <= addr_in;
                 data_out    <= data_in;
                 reg_dst_out <= reg_dst_in;
+                RegWriteM   <= RegWriteE;
+                MemtoRegM   <= MemtoRegE;
+                MemWriteM   <= MemWriteE;
+                BranchM     <= BranchE;
+
             end if;
             if (reset = '1') then
                 addr_out    <= (others =>'0');
                 data_out    <= (others =>'0');
                 reg_dst_out <= (others =>'0');
+                RegWriteM   <= '0';
+                MemtoRegM   <= '0';
+                MemWriteM   <= '0';
+                BranchM     <= '0';
             end if;
         end if;
     end process;
 end comportamental;
+
