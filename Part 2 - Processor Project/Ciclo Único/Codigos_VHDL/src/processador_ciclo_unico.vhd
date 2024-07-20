@@ -94,7 +94,7 @@ begin
 	);
 
 	instancia_via_de_dados_ciclo_unico : via_de_dados_ciclo_unico
-	port (
+	port map(
 		-- declare todas as portas da sua via_dados_ciclo_unico aqui.
 		clock     => Clock,
 		reset     => Chave_reset,
