@@ -7,15 +7,15 @@ entity HazardUnit is
     instrucao : in std_logic_vector(31 downto 0);
 
     -- Execute
-    RegWEN_exe : in std_logic; --(men_sel = Menwrite) (RegWEN = RegWrite)
+    RegWEN_exe : in std_logic; 
     rs1E, rs2E : in std_logic_vector(4 downto 0);
     -- Memory
     RegWriteM  : in std_logic;
-    WriteRegE, WriteRegM : in std_logic_vector(4 downto 0);
+    WriteRegE, WriteRegM : in std_logic_vector(32 downto 0);
 
     -- Writeback
     RegWriteW : in std_logic;
-    WriteRegW : in std_logic_vector(4 downto 0);
+    WriteRegW : in std_logic_vector(32 downto 0);
 
     forwardAE,ForwardBE : out  std_logic_vector(1 downto 0)
 
