@@ -8,12 +8,12 @@ use ieee.std_logic_1164.all;
 
 entity reg_decode is
     generic (
-        largura_dado : natural := 7
+        largura_dado : natural := 32
     );
     port (
-        entrada_pc, entrada_pcnext  : in std_logic_vector((largura_dado - 1) downto 0);
-        WE, clk, reset              : in std_logic;
-        saida_pc,saida_pcnext       : out std_logic_vector((largura_dado - 1) downto 0)
+        entrada_instrucao  : in std_logic_vector((largura_dado - 1) downto 0);
+        WE, clk, reset     : in std_logic;
+        saida_instrucao    : out std_logic_vector((largura_dado - 1) downto 0)
     );
 end reg_decode;
 
@@ -23,12 +23,10 @@ begin
     begin
         if (rising_edge(clk)) then
             if (WE = '1') then
-                saida_pc     <= entrada_pc;
-                saida_pcnext <= entrada_pcnext;
+                saida_instrucao <= entrada_instrucao;
             end if;
             if (reset = '1') then
-                saida_pc     <= (others =>'0');
-                saida_pcnext <= (others =>'0');
+                saida_instrucao <= (others =>'0');
             end if;
         end if;
     end process;
