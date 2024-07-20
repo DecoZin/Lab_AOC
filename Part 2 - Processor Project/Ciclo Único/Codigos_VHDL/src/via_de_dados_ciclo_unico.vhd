@@ -226,7 +226,10 @@ begin
 
 	aux_pc_jump <= aux_data_in (6 downto 0);
 
-	instancia_mux1 : component mux21_7bits
+	instancia_mux1 : component mux21
+		generic map(
+			largura_dado => 7
+		)
 		port map(
 			dado_ent_0 => aux_pc_next,
 			dado_ent_1 => aux_pc_jump,
@@ -238,8 +241,8 @@ begin
 
 	instancia_mux2 : component mux21
 		generic map(
-			largura_dado : natural := 7
-		);
+			largura_dado => 7
+		)
 		port map(
 			dado_ent_0 => aux_pc_mux,
 			dado_ent_1 => aux_pc_reg,
@@ -285,7 +288,7 @@ begin
 
 	instancia_muxDst : component mux21
 		generic map(
-			largura_dado : natural := 5
+			largura_dado => 5
 		)
 		port map(
 			dado_ent_0 => aux_rd_ins,
@@ -300,9 +303,9 @@ begin
 			saida      => aux_imm_ext
 		);
 
-	instancia_muxDst : component mux21
+	instancia_muxALU : component mux21
 		generic map(
-			largura_dado : natural := 32
+			largura_dado => 32
 		)
 		port map(
 			dado_ent_0 => aux_data_outrt,
@@ -315,8 +318,8 @@ begin
   		port map(
 			entrada_a => aux_data_outrs,
 			entrada_b => aux_alu2_in,
-			seletor		=> aux_ula_ctrl,
-			saida			=> aux_alu_out
+			seletor	  => aux_ALUCtrl,
+			saida	  => aux_alu_out
  		);
 
 	aux_alu_outb <= aux_alu_out(0);
@@ -328,13 +331,12 @@ begin
 			saida			=> aux_branch_ctrl 
  		);
 
-	aux
 
-	instancia_instructionMem : component memd
+	instancia_dataMem : component memd
 		port map(
-			clk							=> clock,
+			clk					=> clock,
 			mem_write 			=> aux_data_write,
-			write_data_mem	=> aux_data_outrt,
+			write_data_mem	    => aux_data_outrt,
 			adress_mem 			=> aux_alu_out,
 			read_data_mem		=> aux_mem_out
 		);
