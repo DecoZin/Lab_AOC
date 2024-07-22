@@ -139,7 +139,7 @@ architecture comportamento of via_de_dados_ciclo_unico is
 			MI_ADDR_WIDTH : natural := 7  -- tamanho do endereco da memoria de instrucoes em numero de bits
 		);
 		port (
-			clk       : in std_logic;
+			--clk       : in std_logic;
 			reset     : in std_logic;
 			Endereco  : in std_logic_vector(MI_ADDR_WIDTH - 1 downto 0);
 			Instrucao : out std_logic_vector(INSTR_WIDTH - 1 downto 0)
@@ -273,7 +273,7 @@ begin
 
 	instancia_instructionMem : component memi
 		port map(
-			clk       => clock,
+			--clk       => clock,
 			reset     => reset,
 			Endereco  => aux_pc_out,
 			Instrucao => aux_instruncao

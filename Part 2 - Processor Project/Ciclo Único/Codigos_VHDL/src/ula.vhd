@@ -108,7 +108,7 @@ begin
       end if ;
         
       when "01000" => -- módulo
-      resultado_ula ((largura_dado - 1) downto 0) <= std_logic_vector(to_unsigned(sqrt_function(to_integer(real_a*real_a + imag_a*imag_a)), 16)) & std_logic_vector(to_unsigned(0, 16));
+      resultado_ula ((largura_dado - 1) downto 0) <= std_logic_vector(to_unsigned(sqrt_function(to_integer(real_a*real_a + imag_a*imag_a)), 32));
       
       when "01001" => -- conjulgado
       resultado_ula ((largura_dado - 1) downto (largura_dado / 2)) <= std_logic_vector(real_a);

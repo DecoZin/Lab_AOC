@@ -1,8 +1,8 @@
 # Reais 
 addi  x1, zero,  2; #  x1 =  0 +  2
 addi  x2, zero,  6; #  x2 =  0 +  6
-add   x3,   x2, x1; #  x3 = x2 + x1
-sub   x4,   x2, x1; #  x4 = x2 - x1
+add   x3,   x2, x1; #  x3 = x2 + x1 = 8
+sub   x4,   x2, x1; #  x4 = x2 - x1 = 4
 mul   x5,   x2, x1; #  x5 = x2 * x1
 div   x6,   x2, x1; #  x6 = x2 / x1
 and   x7,   x2, x1; #  x7 = x2 && x1
@@ -26,4 +26,4 @@ abs  x17,   x2;      # x17 = abs(x2)
 abs  x18,   x1;      # x18 = abs(x1)
 conj x19,   x2;      # x19 = conj(x2)
 conj x20,   x1;      # x20 = conj(x1)
-bgt  x18,  x17, -13; # if x2 >  x21 then jmp to inst addi address
+bgt  x17,  x18, -13; # if x2 >  x21 then jmp to inst addi address

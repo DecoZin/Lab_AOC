@@ -13,7 +13,7 @@ entity memi is
 		MI_ADDR_WIDTH : natural := 7  -- tamanho do endereco da memoria de instrucoes em numero de bits
 	);
 	port (
-		clk       : in std_logic;
+		--clk       : in std_logic;
 		reset     : in std_logic;
 		Endereco  : in std_logic_vector(MI_ADDR_WIDTH - 1 downto 0);
 		Instrucao : out std_logic_vector(INSTR_WIDTH - 1 downto 0)
@@ -24,9 +24,9 @@ architecture comportamental of memi is
 	type rom_type is array (0 to 2 ** MI_ADDR_WIDTH - 1) of std_logic_vector(INSTR_WIDTH - 1 downto 0);
 	signal rom : rom_type;
 begin
-	process (clk, reset) is
+	process (Endereco, reset) is
 	begin
-		if (rising_edge(clk)) then
+		--if (rising_edge(clk)) then
 			if (reset = '1') then
 				rom <= (
            0 => "00010000000000000001000000000010",
@@ -52,15 +52,15 @@ begin
           20 => "10101000100000101111000000000000",
           21 => "01101000100000110000000000000000",
           22 => "10110000100000010001000000000000",
-          23 => "10110000100000010010000000000000",
+          23 => "10110000010000010010000000000000",
           24 => "10111000010000010011000000000000",
           25 => "10111000100000010100000000000000",
-          26 => "10000100101000100000111111110011",
+          26 => "10000100011001000000111111110011",
 					others => X"00000000"  -- exemplo de uma instrução qualquer de 32 bits
 					);
 			else
 				Instrucao <= rom(to_integer(unsigned(Endereco)));
 			end if;
-		end if;
+		--end if;
 	end process;
 end comportamental;
