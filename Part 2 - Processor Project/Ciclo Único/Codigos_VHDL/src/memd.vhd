@@ -8,15 +8,16 @@ use ieee.numeric_std.all;
 
 entity memd is
     generic (
-        number_of_words : natural := 500;--134217728; -- número de words que a sua memória é capaz de armazenar
+        number_of_words : natural := 512;--134217728; -- número de words que a sua memória é capaz de armazenar
         MD_DATA_WIDTH   : natural := 32;        -- tamanho da palavra em bits
-        MD_ADDR_WIDTH   : natural := 32         -- tamanho do endereco da memoria de dados em bits
+        MD_ADDR_WIDTH   : natural := 9         -- tamanho do endereco da memoria de dados em bits
     );
     port (
         clk             : in std_logic;
         mem_write       : in std_logic; --sinais do controlador
         write_data_mem  : in std_logic_vector(MD_DATA_WIDTH - 1 downto 0);
         adress_mem      : in std_logic_vector(MD_ADDR_WIDTH - 1 downto 0);
+        reset           : in std_logic;
         read_data_mem   : out std_logic_vector(MD_DATA_WIDTH - 1 downto 0)
     );
 end memd;
@@ -31,9 +32,17 @@ begin
     process (clk)
     begin
         if (rising_edge(clk)) then
+          if (reset = '1') then
+				    ram <= (
+					  0      => X"00030004", 
+					  1      => X"000C0005", 
+					  others => X"00000000"  
+					);
+          else
             if (mem_write = '1') then
                 ram(to_integer(unsigned(ram_addr))) <= write_data_mem;
             end if;
+          end if;
         end if;
     end process;
     read_data_mem <= ram(to_integer(unsigned(ram_addr))) when (mem_write = '0');

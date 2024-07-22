@@ -14,6 +14,9 @@ end tb_processador_ciclo_unico;
 architecture estimulos of tb_processador_ciclo_unico is
 	-- Declarar a unidade sob teste
 	component processador_ciclo_unico
+  generic (
+		data_width  : natural := 32	-- tamanho do dado em bits
+  );
 		port (
 		-- Chaves_entrada				: in std_logic_vector(DATA_WIDTH-1 downto 0);
 		-- Chave_enter						: in std_logic ;
@@ -23,9 +26,10 @@ architecture estimulos of tb_processador_ciclo_unico is
 		Clock									: in std_logic
 	);
 	end component;
-  
-	signal clk : std_logic;
-	signal rst : std_logic;
+
+  constant  data_width  : natural := 32;	-- tamanho do dado em bits
+
+	signal rst : std_logic := '1';
   signal aux_pc_out   : std_logic_vector(6 downto 0) ;
   signal aux_leds_out : std_logic_vector(DATA_WIDTH -1 downto 0) ;  
 
@@ -40,8 +44,8 @@ begin
   port map(
     pc_out => aux_pc_out, 
     Leds_vermelhos_saida => aux_leds_out, 
-    clk => clk, 
-    reset => rst
+    Clock => clk, 
+    Chave_reset => rst
   );
 	-- processo para gerar o sinal de clock 		
 CLOCK_GENERATOR: process
@@ -58,7 +62,8 @@ CLOCK_GENERATOR: process
   -- processo para gerar o estimulo de reset		
 	STIMULUS : process
 	begin
-		rst <= '0';
+    wait until rising_edge(clk);
+    rst <= '0';
 		for i in 1 to 50 loop
 			wait until rising_edge(clk);
 		end loop;

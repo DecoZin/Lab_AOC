@@ -69,7 +69,6 @@ architecture comportamento of via_de_dados_ciclo_unico is
 			ent_rd_dado : in std_logic_vector((largura_dado - 1) downto 0);
 			sai_rs_dado : out std_logic_vector((largura_dado - 1) downto 0);
 			sai_rt_dado : out std_logic_vector((largura_dado - 1) downto 0);
-			clk         : in std_logic;
 			we          : in std_logic
 		);
 	end component;
@@ -109,7 +108,7 @@ architecture comportamento of via_de_dados_ciclo_unico is
 	
 	component extensor is
 		generic (
-			largura_dado  : natural := 16;  
+			largura_dado  : natural := 12;  
 			largura_saida : natural := 32
 		);
 		port (
@@ -120,12 +119,13 @@ architecture comportamento of via_de_dados_ciclo_unico is
 
 	component memd is
 		generic (
-        number_of_words : natural := 134217728; -- número de words que a sua memória é capaz de armazenar
-        MD_DATA_WIDTH   : natural := 32;        -- tamanho da palavra em bits
-        MD_ADDR_WIDTH   : natural := 32         -- tamanho do endereco da memoria de dados em bits
+        number_of_words : natural := 512; -- número de words que a sua memória é capaz de armazenar
+        MD_DATA_WIDTH   : natural := 32;  -- tamanho da palavra em bits
+        MD_ADDR_WIDTH   : natural := 9   -- tamanho do endereco da memoria de dados em bits
     );
     port (
         clk							: in std_logic;
+        reset           : in std_logic;
         mem_write				: in std_logic; --sinais do controlador
         write_data_mem	: in std_logic_vector(MD_DATA_WIDTH - 1 downto 0);
         adress_mem			: in std_logic_vector(MD_ADDR_WIDTH - 1 downto 0);
@@ -165,7 +165,7 @@ architecture comportamento of via_de_dados_ciclo_unico is
 	signal aux_read_rt    : std_logic_vector(fr_addr_width - 1 downto 0);
 	signal aux_write_rd   : std_logic_vector(fr_addr_width - 1 downto 0);
 	signal aux_rd_ins     : std_logic_vector(fr_addr_width - 1 downto 0);
-	signal aux_imm        : std_logic_vector(15 downto 0);
+	signal aux_imm        : std_logic_vector(11 downto 0);
 	signal aux_imm_ext    : std_logic_vector(data_width - 1 downto 0);
 
 	signal aux_data_in    : std_logic_vector(data_width - 1 downto 0);
@@ -197,8 +197,8 @@ begin
 	-- Veja os exemplos abaixo:
 	aux_read_rs   <= aux_instruncao(26 downto 22);  -- OP OP OP OP RD RD RD RD RS RS RS RS RT RT RT RT
 	aux_read_rt   <= aux_instruncao(21 downto 17);  -- OP OP OP OP RD RD RD RD RS RS RS RS RT RT RT RT
-	aux_rd_ins    <= aux_instruncao(20 downto 16); -- OP OP OP OP RD RD RD RD RS RS RS RS RT RT RT RT
-	aux_imm       <= aux_instruncao(15 downto 0);
+	aux_rd_ins    <= aux_instruncao(16 downto 12);  -- OP OP OP OP RD RD RD RD RS RS RS RS RT RT RT RT
+	aux_imm       <= aux_instruncao(11 downto 0);
 
 	instrucao <= aux_instruncao;
 
@@ -223,8 +223,6 @@ begin
 	-- atribuição deve aparecer um dos sinais ("fios") que você definiu anteriormente, ou uma das entradas da entidade via_de_dados_ciclo_unico,
 	-- ou ainda uma das saídas da entidade via_de_dados_ciclo_unico.
 	-- Veja os exemplos de instanciação a seguir:
-
-	aux_pc_jump <= aux_data_in (6 downto 0);
 
 	instancia_mux1 : component mux21
 		generic map(
@@ -266,6 +264,13 @@ begin
 			saida			=> aux_pc_next
 		);
 
+	instancia_somadorBranch : component somador
+		port map(
+			entrada_a => aux_pc_next,
+			entrada_b => aux_imm(6 downto 0),
+			saida			=> aux_pc_jump
+		);
+
 	instancia_instructionMem : component memi
 		port map(
 			clk       => clock,
@@ -282,7 +287,6 @@ begin
 			ent_rd_dado => aux_data_in,
 			sai_rs_dado => aux_data_outrs,
 			sai_rt_dado => aux_data_outrt,
-			clk					=> clock,
 			we					=> aux_reg_write
 		);
 
@@ -334,10 +338,11 @@ begin
 
 	instancia_dataMem : component memd
 		port map(
-			clk					=> clock,
+			clk					    => clock,
+      reset           => reset,
 			mem_write 			=> aux_data_write,
-			write_data_mem	    => aux_data_outrt,
-			adress_mem 			=> aux_alu_out,
+			write_data_mem  => aux_data_outrt,
+			adress_mem 			=> aux_alu_out(8 downto 0),
 			read_data_mem		=> aux_mem_out
 		);
 

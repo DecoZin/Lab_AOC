@@ -27,14 +27,14 @@ architecture comportamento of processador_ciclo_unico is
 	-- declare todos os componentes que serão necessários no seu processador_ciclo_unico a partir deste comentário
 	component via_de_dados_ciclo_unico is
 		generic (
-		-- declare todos os tamanhos dos barramentos (sinais) das portas da sua via_dados_ciclo_unico aqui.
-		dp_ctrl_bus_width : natural := 7;	-- tamanho do barramento de controle da via de dados (DP) em bits
-		alu_ctrl_width		: natural := 5;		-- tamanho do controle da alu
-		data_width        : natural := 32;	-- tamanho do dado em bits
-		pc_width          : natural := 7;		-- tamanho da entrada de endereços da MI ou MP em bits (memi.vhd)
-		fr_addr_width     : natural := 5;		-- tamanho da linha de endereços do banco de registradores em bits
-		ula_ctrl_width    : natural := 5;		-- tamanho da linha de controle da ULA
-		instr_width       : natural := 32		-- tamanho da instrução em bits
+      -- declare todos os tamanhos dos barramentos (sinais) das portas da sua via_dados_ciclo_unico aqui.
+      dp_ctrl_bus_width : natural := 7;	-- tamanho do barramento de controle da via de dados (DP) em bits
+      alu_ctrl_width		: natural := 5;		-- tamanho do controle da alu
+      data_width        : natural := 32;	-- tamanho do dado em bits
+      pc_width          : natural := 7;		-- tamanho da entrada de endereços da MI ou MP em bits (memi.vhd)
+      fr_addr_width     : natural := 5;		-- tamanho da linha de endereços do banco de registradores em bits
+      ula_ctrl_width    : natural := 5;		-- tamanho da linha de controle da ULA
+      instr_width       : natural := 32		-- tamanho da instrução em bits
 		);
 		port (
 			-- declare todas as portas da sua via_dados_ciclo_unico aqui.
@@ -57,7 +57,7 @@ architecture comportamento of processador_ciclo_unico is
     );
     port (
 			instrucao : in std_logic_vector(INSTR_WIDTH - 1 downto 0);          -- instrução
-			controle  : out std_logic_vector(DP_CTRL_BUS_WIDTH - 1 downto 0)    -- controle da via
+			controle  : out std_logic_vector(DP_CTRL_BUS_WIDTH - 1 downto 0);    -- controle da via
 			alu_ctrl  : out std_logic_vector(ULA_CTRL_WIDTH - 1 downto 0)       -- Controle da ALU
     );
 	end component;
