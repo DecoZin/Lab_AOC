@@ -8,7 +8,7 @@ use ieee.std_logic_1164.all;
 
 entity extensor is
 	generic (
-		largura_dado  : natural := 16;
+		largura_dado  : natural := 12;
 		largura_saida : natural := 32
 	);
 
@@ -19,7 +19,7 @@ entity extensor is
 end extensor;
 
 architecture dataflow of extensor is
-	signal extensao : std_logic_vector((largura_dado - 1) downto 0);
+	signal extensao : std_logic_vector(((largura_saida - largura_dado) - 1) downto 0);
 begin
 	extensao <= (others => entrada_Rs(largura_dado - 1)); -- todos os bits da extensão correspondem ao bit mais significativo da entrada Rs
 	saida    <= extensao & entrada_Rs;                    -- saida com o sinal estendido de Rs, concatenado com Rs. 

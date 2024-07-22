@@ -9,7 +9,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 -- unidade de controle
-entity unidade_de_controle_ciclo_unico is
+entity unidade_de_controle_pipeline is
     generic (
         INSTR_WIDTH       : natural := 32;
         OPCODE_WIDTH      : natural := 5;
@@ -21,9 +21,9 @@ entity unidade_de_controle_ciclo_unico is
         controle  : out std_logic_vector(DP_CTRL_BUS_WIDTH - 1 downto 0);    -- controle da via
         alu_ctrl  : out std_logic_vector(ULA_CTRL_WIDTH - 1 downto 0)       -- Controle da ALU
     );
-end unidade_de_controle_ciclo_unico;
+end unidade_de_controle_pipeline;
 
-architecture beh of unidade_de_controle_ciclo_unico is
+architecture beh of unidade_de_controle_pipeline is
     -- As linhas abaixo não produzem erro de compilação no Quartus II, mas no Modelsim (GHDL) produzem.	
     --signal inst_aux : std_logic_vector (INSTR_WIDTH-1 downto 0);			-- instrucao
     --signal opcode   : std_logic_vector (OPCODE_WIDTH-1 downto 0);			-- opcode

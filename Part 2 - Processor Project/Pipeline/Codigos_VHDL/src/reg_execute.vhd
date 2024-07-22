@@ -18,7 +18,6 @@ entity reg_execute is
         RegWriteE      : in std_logic;
         MemtoRegE      : in std_logic;
         MemWriteE      : in std_logic;
-        BranchE        : in std_logic;
 
         reg_dst_in     : in std_logic_vector((largura_banco - 1) downto 0);
         WE, clk, reset : in std_logic;
@@ -28,8 +27,7 @@ entity reg_execute is
 
         RegWriteM      : out std_logic;
         MemtoRegM      : out std_logic;
-        MemWriteM      : out std_logic;
-        BranchM        : out std_logic
+        MemWriteM      : out std_logic
 
     );
 end reg_execute;
@@ -46,7 +44,6 @@ begin
                 RegWriteM   <= RegWriteE;
                 MemtoRegM   <= MemtoRegE;
                 MemWriteM   <= MemWriteE;
-                BranchM     <= BranchE;
 
             end if;
             if (reset = '1') then
@@ -56,7 +53,6 @@ begin
                 RegWriteM   <= '0';
                 MemtoRegM   <= '0';
                 MemWriteM   <= '0';
-                BranchM     <= '0';
             end if;
         end if;
     end process;
