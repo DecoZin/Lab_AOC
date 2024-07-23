@@ -4,19 +4,18 @@ use ieee.std_logic_1164.all;
 --Só tem Forward
 entity hazard is
   port (
-    instrucao : in std_logic_vector(31 downto 0);
-
-    -- Execute
-    RegWEN_exe : in std_logic; 
-    rs1E, rs2E : in std_logic_vector(4 downto 0);
-    -- Memory
-    RegWriteM  : in std_logic;
-    WriteRegE, WriteRegM : in std_logic_vector(31 downto 0);
-
-    -- Writeback
+    rs1E : in std_logic_vector(4 downto 0);  --Endereço Rs (R_source1)
+    rs2E : in std_logic_vector(4 downto 0);  --Endereço Rt (R_source2)
+  
+    --Sinais de controle que vão para memd e Banco de registradores
+    RegWriteM  : in std_logic; 
     RegWriteW : in std_logic;
-    WriteRegW : in std_logic_vector(31 downto 0);
 
+    --Enderenço que vão ser escrito na memoria (Saído MuxDst)
+    AddrRdM : in std_logic_vector(4 downto 0);
+    AddrRdW : in std_logic_vector(4 downto 0);
+
+    --Controle do MUX AE e BE
     forwardAE,ForwardBE : out  std_logic_vector(1 downto 0)
 
   );
@@ -25,21 +24,21 @@ end hazard;
 architecture Behavioral of hazard is
   begin
     
-    process(RegWEN_exe, RegWriteM, WriteRegE, WriteRegM, RegWriteW, WriteRegW) is
+    process(RegWriteM,RegWriteW,rs1E,rs2E,AddrRdM,RegWriteW) is
       begin
         --ForwardAE
-        if ((rs1E /= "00000") and (rs1E = WriteRegM) and (RegWriteM = '1') ) then
-            ForwardAE <= "10";
-        elsif ((rs1E /= "00000") and (rs1E = WriteRegW) and (RegWriteW = '1')) then
-            ForwardAE <= "01";
+        if ((rs1E /= "00000") and (rs1E = AddrRdM) and (RegWriteM = '1') ) then
+          ForwardAE <= "10";
+        elsif ((rs1E /= "00000") and (rs1E = AddrRdW) and (RegWriteW = '1')) then
+          ForwardAE <= "01";
         else ForwardAE <= "00";
         end if;
         
         --ForwardBE
-        if ((rs2E /= "00000") and (rs2E = WriteRegM) and (RegWriteM = '1')) then
+        if ((rs2E /= "00000") and (rs2E = AddrRdM) and (RegWriteM = '1')) then
           ForwardBE <= "10";
-        elsif ((rs2E /= "00000") and (rs2E = WriteRegW)and (RegWriteW = '1')) then
-            ForwardBE <= "01";
+        elsif ((rs2E /= "00000") and (rs2E = AddrRdW)and (RegWriteW = '1')) then
+          ForwardBE <= "01";
         else ForwardBE <= "00";
         end if;
 
