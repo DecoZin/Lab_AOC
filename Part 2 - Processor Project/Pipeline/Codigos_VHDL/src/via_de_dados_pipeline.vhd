@@ -223,21 +223,21 @@ architecture comportamento of via_de_dados_pipeline is
   --HazardUnit
   component hazard is
     port (
-      instrucao : in std_logic_vector(31 downto 0);
-
-      -- Execute
-      RegWEN_exe : in std_logic; 
-      rs1E, rs2E : in std_logic_vector(4 downto 0);
-      -- Memory
-      RegWriteM  : in std_logic;
-      WriteRegE, WriteRegM : in std_logic_vector(31 downto 0);
-
-      -- Writeback
-      RegWriteW : in std_logic;
-      WriteRegW : in std_logic_vector(31 downto 0);
-
-      forwardAE,ForwardBE : out  std_logic_vector(1 downto 0)
-    );
+		rs1E : in std_logic_vector(4 downto 0);  --Endereço Rs (R_source1)
+		rs2E : in std_logic_vector(4 downto 0);  --Endereço Rt (R_source2)
+	  
+		--Sinais de controle que vão para memd e Banco de registradores
+		RegWriteM  : in std_logic; 
+		RegWriteW : in std_logic;
+	
+		--Enderenço que vão ser escrito na memoria (Saído MuxDst)
+		AddrRdM : in std_logic_vector(4 downto 0);
+		AddrRdW : in std_logic_vector(4 downto 0);
+	
+		--Controle do MUX AE e BE
+		forwardAE,ForwardBE : out  std_logic_vector(1 downto 0)
+	
+	  );
   end component;
 
 
@@ -539,18 +539,15 @@ begin
 		
 		instancia_HazardUnit : component hazard
 			port map(
-				instrucao   => aux_instruncao,
-        RegWEN_exe  => aux_data_writeE,
-        rs1E        => aux_read_rs,
-				rs2E        => aux_read_rt,
-        RegWriteM   => aux_datatoregM,
-        WriteRegE   => aux_data_outrtE,
-				WriteRegM   => aux_data_outrtM,
-        RegWriteW   => aux_datatoregW,
-        WriteRegW   => aux_data_in,
-				forwardAE   => aux_ctrl_forwardAE,
-				ForwardBE   => aux_ctrl_forwardBE
-			);
+				rs1E          => aux_read_rs,
+				rs2E          => aux_read_rt,
+				RegWriteM     => aux_reg_writeM, 
+				RegWriteW     => aux_reg_writeW,
+				AddrRdM       => aux_write_rdM,
+				AddrRdW       => aux_write_rdW,
+				forwardAE     => aux_ctrl_forwardAE,
+				ForwardBE     => aux_ctrl_forwardBE
+			  );
 
 
 end architecture comportamento;
