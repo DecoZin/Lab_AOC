@@ -69,7 +69,7 @@ architecture comportamento of via_de_dados_pipeline is
 			ent_rd_dado : in std_logic_vector((largura_dado - 1) downto 0);
 			sai_rs_dado : out std_logic_vector((largura_dado - 1) downto 0);
 			sai_rt_dado : out std_logic_vector((largura_dado - 1) downto 0);
-			we          : in std_logic
+			clk,we          : in std_logic
 		);
 	end component;
 
@@ -187,24 +187,25 @@ architecture comportamento of via_de_dados_pipeline is
 
   component reg_writeback is
     generic (
-      largura_dado  : natural := 32;
-      largura_banco : natural := 5
+        largura_dado  : natural := 32;
+        largura_banco : natural := 5
     );
     port (
-      addr_in        : in std_logic_vector((largura_dado - 1) downto 0);
-      data_in        : in std_logic_vector((largura_dado - 1) downto 0);
-      RegWriteM      : in std_logic;
-      MemtoRegM      : in std_logic;
-      reg_dst_in     : in std_logic_vector((largura_banco - 1) downto 0);
-      
-      WE, clk, reset : in std_logic;
-      
-      addr_out       : out std_logic_vector((largura_dado - 1) downto 0);
-      data_out       : out std_logic_vector((largura_dado - 1) downto 0);
-      RegWriteW      : out std_logic;
-      MemtoRegW      : out std_logic;
-      reg_dst_out    : in std_logic_vector((largura_banco - 1) downto 0)
-    );
+        addr_in        : in std_logic_vector((largura_dado - 1) downto 0);
+        data_in        : in std_logic_vector((largura_dado - 1) downto 0);
+
+        RegWriteM      : in std_logic;
+        MemtoRegM      : in std_logic;
+
+        reg_dst_in     : in std_logic_vector((largura_banco - 1) downto 0);
+        WE, clk, reset : in std_logic;
+        addr_out       : out std_logic_vector((largura_dado - 1) downto 0);
+        data_out       : out std_logic_vector((largura_dado - 1) downto 0);
+
+        RegWriteW      : out std_logic;
+        MemtoRegW      : out std_logic;
+        reg_dst_out    : out std_logic_vector((largura_banco - 1) downto 0)
+	);
 	end component;
 
 
@@ -235,7 +236,7 @@ architecture comportamento of via_de_dados_pipeline is
 		AddrRdW : in std_logic_vector(4 downto 0);
 	
 		--Controle do MUX AE e BE
-		forwardAE,ForwardBE : out  std_logic_vector(1 downto 0)
+		forwardAE,forwardBE : out  std_logic_vector(1 downto 0)
 	
 	  );
   end component;
@@ -404,7 +405,8 @@ begin
 			ent_rd_dado => aux_data_in,
 			sai_rs_dado => aux_data_outrs,
 			sai_rt_dado => aux_data_outrtE,
-			we			    => aux_reg_writeE
+			clk         => clock,
+			we			=> aux_reg_writeE
 		);
 
 	instancia_muxDst : component mux21
@@ -514,7 +516,7 @@ begin
       addr_out        => aux_mem_outW,
       data_out        => aux_alu_outW,
       RegWriteW       => aux_reg_writeW,
-      MemtoRegW      	=> aux_datatoregW,
+      MemtoRegW       => aux_datatoregW,
       reg_dst_out     => aux_write_rdW 		
     );
 		
@@ -522,8 +524,8 @@ begin
 		instancia_ForwardAE : component mux31
 			port map(
 				dado_ent_0   => aux_data_outrs,
-				dado_ent_1   => aux_data_outrtM,
-				dado_ent_2   => aux_data_in,
+				dado_ent_1   => aux_alu_outM,
+				dado_ent_2   => aux_alu_outW,
 				sele_ent     => aux_ctrl_forwardAE,     
 				dado_sai     => aux_forwardAE                     
 			);
@@ -531,8 +533,8 @@ begin
 		instancia_ForwardBE : component mux31
 			port map(
 				dado_ent_0   => aux_data_outrtE,
-				dado_ent_1   => aux_data_outrtM,
-				dado_ent_2   => aux_data_in,
+				dado_ent_1   => aux_alu_outM,
+				dado_ent_2   => aux_alu_outW,
 				sele_ent     => aux_ctrl_forwardBE,     
 				dado_sai     => aux_forwardBE                      
 			);
@@ -546,7 +548,7 @@ begin
 				AddrRdM       => aux_write_rdM,
 				AddrRdW       => aux_write_rdW,
 				forwardAE     => aux_ctrl_forwardAE,
-				ForwardBE     => aux_ctrl_forwardBE
+				forwardBE     => aux_ctrl_forwardBE
 			  );
 
 
