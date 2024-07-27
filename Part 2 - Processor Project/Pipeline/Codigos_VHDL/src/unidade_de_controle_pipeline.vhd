@@ -110,17 +110,17 @@ begin
             
                 -- BEQ	
             when "01110" =>
-                ctrl_aux <= "0001100";
+                ctrl_aux <= "0000100";
                 ctrl_ula <= "01110";
             
                 -- BLT	
             when "01111" =>
-                ctrl_aux <= "0001100";
+                ctrl_aux <= "0000100";
                 ctrl_ula <= "10000";
             
                 -- BGT	
             when "10000" =>
-                ctrl_aux <= "0001100";
+                ctrl_aux <= "0000100";
                 ctrl_ula <= "01111";
             
                 -- JMP	

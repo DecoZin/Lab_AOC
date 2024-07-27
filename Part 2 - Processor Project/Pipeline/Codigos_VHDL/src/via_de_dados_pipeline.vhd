@@ -234,9 +234,15 @@ architecture comportamento of via_de_dados_pipeline is
 		--Enderenço que vão ser escrito na memoria (Saído MuxDst)
 		AddrRdM : in std_logic_vector(4 downto 0);
 		AddrRdW : in std_logic_vector(4 downto 0);
+
+    -- Branch
+    branch : in std_logic;
 	
 		--Controle do MUX AE e BE
-		forwardAE,forwardBE : out  std_logic_vector(1 downto 0)
+		forwardAE,forwardBE : out  std_logic_vector(1 downto 0);
+
+    -- Controle de Stall para Branch
+    stallD, stallF : out std_logic
 	
 	  );
   end component;
@@ -307,6 +313,8 @@ architecture comportamento of via_de_dados_pipeline is
 	signal aux_ctrl_forwardAE  : std_logic_vector(1 downto 0);
   signal aux_ctrl_forwardBE  : std_logic_vector(1 downto 0);
 
+  signal aux_stallF : std_logic;
+  signal aux_stallD : std_logic;
 
 begin
 
@@ -371,7 +379,7 @@ begin
 			entrada	=> aux_novo_pc,
 			saida		=> aux_pc_out,
 			clk			=> clock,
-			we			=> '1',
+			we			=> aux_stallF,
 			reset		=> reset
 		);
 
@@ -477,7 +485,7 @@ begin
   instancia_regDecode : component reg_decode
     port map(                 
       entrada_instrucao  => aux_meminstruncao,       
-      WE                 => '1',
+      WE                 => aux_stallD,
       clk                => clock,
       reset              => reset,       
       saida_instrucao    => aux_instruncao    
@@ -541,14 +549,17 @@ begin
 		
 		instancia_HazardUnit : component hazard
 			port map(
-				rs1E          => aux_read_rs,
-				rs2E          => aux_read_rt,
-				RegWriteM     => aux_reg_writeM, 
-				RegWriteW     => aux_reg_writeW,
-				AddrRdM       => aux_write_rdM,
-				AddrRdW       => aux_write_rdW,
-				forwardAE     => aux_ctrl_forwardAE,
-				forwardBE     => aux_ctrl_forwardBE
+				rs1E         => aux_read_rs,
+				rs2E         => aux_read_rt,
+				RegWriteM    => aux_reg_writeM, 
+				RegWriteW    => aux_reg_writeW,
+				AddrRdM      => aux_write_rdM,
+				AddrRdW      => aux_write_rdW,
+				branch       => aux_branch,
+				forwardAE    => aux_ctrl_forwardAE,
+				forwardBE    => aux_ctrl_forwardBE,
+        stallD       => aux_stallD,
+        stallF       => aux_stallF
 			  );
 
 

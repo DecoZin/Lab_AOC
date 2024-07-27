@@ -15,8 +15,14 @@ entity hazard is
     AddrRdM : in std_logic_vector(4 downto 0);
     AddrRdW : in std_logic_vector(4 downto 0);
 
+    -- Branch
+    branch : in std_logic;
+
     --Controle do MUX AE e BE
-    forwardAE,forwardBE : out  std_logic_vector(1 downto 0)
+    forwardAE,forwardBE : out  std_logic_vector(1 downto 0);
+    
+    -- Controle de Stall para Branch
+    stallD, stallF : out std_logic
 
   );
 end hazard;
@@ -24,7 +30,7 @@ end hazard;
 architecture Behavioral of hazard is
   begin
     
-    process(RegWriteM,RegWriteW,rs1E,rs2E,AddrRdM,RegWriteW) is
+    process(RegWriteM,RegWriteW,rs1E,rs2E,AddrRdM,RegWriteW, branch) is
       begin
         --ForwardAE
         if ((rs1E /= "00000") and (rs1E = AddrRdM) and (RegWriteM = '1') ) then
@@ -41,6 +47,14 @@ architecture Behavioral of hazard is
           forwardBE <= "10";
         else forwardBE <= "00";
         end if;
+
+        if (branch = '1') then
+          stallD <= '0';
+          stallF <= '0';
+        else
+          stallD <= '1';
+          stallF <= '1';         
+        end if ;
 
     end process;
 
