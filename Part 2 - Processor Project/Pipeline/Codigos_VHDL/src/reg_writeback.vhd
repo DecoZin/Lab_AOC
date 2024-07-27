@@ -25,7 +25,7 @@ entity reg_writeback is
 
         RegWriteW      : out std_logic;
         MemtoRegW      : out std_logic;
-        reg_dst_out    : in std_logic_vector((largura_banco - 1) downto 0)
+        reg_dst_out    : out std_logic_vector((largura_banco - 1) downto 0)
         
 
     );
@@ -41,12 +41,14 @@ begin
                 data_out    <= data_in;
                 RegWriteW   <= RegWriteM;
                 MemtoRegW   <= MemtoRegM;
+                reg_dst_out <= reg_dst_in;
 
 
             end if;
             if (reset = '1') then
                 addr_out    <= (others =>'0');
                 data_out    <= (others =>'0');
+                reg_dst_out <= (others =>'0');
                 RegWriteW   <= '0';
                 MemtoRegW   <= '0';
             end if;
