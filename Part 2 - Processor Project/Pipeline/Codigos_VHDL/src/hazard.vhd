@@ -16,7 +16,7 @@ entity hazard is
     AddrRdW : in std_logic_vector(4 downto 0);
 
     --Controle do MUX AE e BE
-    forwardAE,ForwardBE : out  std_logic_vector(1 downto 0)
+    forwardAE,forwardBE : out  std_logic_vector(1 downto 0)
 
   );
 end hazard;
@@ -28,18 +28,18 @@ architecture Behavioral of hazard is
       begin
         --ForwardAE
         if ((rs1E /= "00000") and (rs1E = AddrRdM) and (RegWriteM = '1') ) then
-          ForwardAE <= "10";
+          forwardAE <= "01";
         elsif ((rs1E /= "00000") and (rs1E = AddrRdW) and (RegWriteW = '1')) then
-          ForwardAE <= "01";
-        else ForwardAE <= "00";
+          forwardAE <= "10";
+        else forwardAE <= "00";
         end if;
         
         --ForwardBE
         if ((rs2E /= "00000") and (rs2E = AddrRdM) and (RegWriteM = '1')) then
-          ForwardBE <= "10";
-        elsif ((rs2E /= "00000") and (rs2E = AddrRdW)and (RegWriteW = '1')) then
-          ForwardBE <= "01";
-        else ForwardBE <= "00";
+          forwardBE <= "01";
+        elsif ((rs2E /= "00000") and (rs2E = AddrRdW) and (RegWriteW = '1')) then
+          forwardBE <= "10";
+        else forwardBE <= "00";
         end if;
 
     end process;
