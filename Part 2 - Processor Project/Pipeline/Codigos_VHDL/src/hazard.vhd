@@ -21,8 +21,8 @@ entity hazard is
     --Controle do MUX AE e BE
     forwardAE,forwardBE : out  std_logic_vector(1 downto 0);
     
-    -- Controle de Stall para Branch
-    stallD, stallF : out std_logic
+    -- Controle de Flush para Branch
+    flushD : out std_logic
 
   );
 end hazard;
@@ -48,12 +48,10 @@ architecture Behavioral of hazard is
         else forwardBE <= "00";
         end if;
 
-        if (branch = '1') then
-          stallD <= '0';
-          stallF <= '0';
+        if (branch = '1' ) then
+          flushD <= '1';
         else
-          stallD <= '1';
-          stallF <= '1';         
+          flushD <= '0';
         end if ;
 
     end process;

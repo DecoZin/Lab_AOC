@@ -148,12 +148,15 @@ architecture comportamento of via_de_dados_pipeline is
     --Registradores Pipeline
     component reg_decode is
 		generic (
-        largura_dado : natural := 32
+        largura_dado : natural := 32;
+        pc_width     : natural :=  7
       );
       port (
         entrada_instrucao  : in std_logic_vector((largura_dado - 1) downto 0);
+	      pc_next_in         : in std_logic_vector((pc_width     - 1) downto 0);
         WE, clk, reset     : in std_logic;
-        saida_instrucao    : out std_logic_vector((largura_dado - 1) downto 0)
+        saida_instrucao    : out std_logic_vector((largura_dado - 1) downto 0);
+	      pc_next_out        : out std_logic_vector((pc_width     - 1) downto 0)
       );
 	end component;
 
@@ -185,28 +188,28 @@ architecture comportamento of via_de_dados_pipeline is
 	end component;
 
 
-  component reg_writeback is
-    generic (
-        largura_dado  : natural := 32;
-        largura_banco : natural := 5
-    );
-    port (
-        addr_in        : in std_logic_vector((largura_dado - 1) downto 0);
-        data_in        : in std_logic_vector((largura_dado - 1) downto 0);
+  -- component reg_writeback is
+  --   generic (
+  --       largura_dado  : natural := 32;
+  --       largura_banco : natural := 5
+  --   );
+  --   port (
+  --       addr_in        : in std_logic_vector((largura_dado - 1) downto 0);
+  --       data_in        : in std_logic_vector((largura_dado - 1) downto 0);
 
-        RegWriteM      : in std_logic;
-        MemtoRegM      : in std_logic;
+  --       RegWriteM      : in std_logic;
+  --       MemtoRegM      : in std_logic;
 
-        reg_dst_in     : in std_logic_vector((largura_banco - 1) downto 0);
-        WE, clk, reset : in std_logic;
-        addr_out       : out std_logic_vector((largura_dado - 1) downto 0);
-        data_out       : out std_logic_vector((largura_dado - 1) downto 0);
+  --       reg_dst_in     : in std_logic_vector((largura_banco - 1) downto 0);
+  --       WE, clk, reset : in std_logic;
+  --       addr_out       : out std_logic_vector((largura_dado - 1) downto 0);
+  --       data_out       : out std_logic_vector((largura_dado - 1) downto 0);
 
-        RegWriteW      : out std_logic;
-        MemtoRegW      : out std_logic;
-        reg_dst_out    : out std_logic_vector((largura_banco - 1) downto 0)
-	);
-	end component;
+  --       RegWriteW      : out std_logic;
+  --       MemtoRegW      : out std_logic;
+  --       reg_dst_out    : out std_logic_vector((largura_banco - 1) downto 0)
+	-- );
+	-- end component;
 
 
   --Mux Forward
@@ -242,7 +245,7 @@ architecture comportamento of via_de_dados_pipeline is
 		forwardAE,forwardBE : out  std_logic_vector(1 downto 0);
 
     -- Controle de Stall para Branch
-    stallD, stallF : out std_logic
+    flushD : out std_logic
 	
 	  );
   end component;
@@ -256,6 +259,7 @@ architecture comportamento of via_de_dados_pipeline is
 
 	signal aux_pc_jump    : std_logic_vector(pc_width - 1 downto 0);
 	signal aux_pc_next    : std_logic_vector(pc_width - 1 downto 0);
+	signal aux_pc_nextE   : std_logic_vector(pc_width - 1 downto 0);
 	signal aux_pc_mux     : std_logic_vector(pc_width - 1 downto 0);
 	signal aux_pc_reg     : std_logic_vector(pc_width - 1 downto 0);
 	signal aux_novo_pc    : std_logic_vector(pc_width - 1 downto 0);
@@ -313,8 +317,8 @@ architecture comportamento of via_de_dados_pipeline is
 	signal aux_ctrl_forwardAE  : std_logic_vector(1 downto 0);
   signal aux_ctrl_forwardBE  : std_logic_vector(1 downto 0);
 
-  signal aux_stallF : std_logic;
-  signal aux_stallD : std_logic;
+  signal resetD : std_logic;
+  signal aux_flushD : std_logic;
 
 begin
 
@@ -379,7 +383,7 @@ begin
 			entrada	=> aux_novo_pc,
 			saida		=> aux_pc_out,
 			clk			=> clock,
-			we			=> aux_stallF,
+			we			=> '1',
 			reset		=> reset
 		);
 
@@ -387,12 +391,12 @@ begin
 		port map(
 			entrada_a => aux_pc_out,
 			entrada_b => "0000001",
-			saida	  => aux_pc_next
+			saida	    => aux_pc_next
 		);
 
   instancia_somadorBranch : component somador
 		port map(
-			entrada_a => aux_pc_next,
+			entrada_a => aux_pc_nextE,
 			entrada_b => aux_imm(6 downto 0),
 			saida			=> aux_pc_jump
 		);
@@ -409,7 +413,7 @@ begin
 		port map(
 			ent_rs_ende => aux_read_rs,
 			ent_rt_ende => aux_read_rt,
-			ent_rd_ende => aux_write_rdW,
+			ent_rd_ende => aux_write_rdM,
 			ent_rd_dado => aux_data_in,
 			sai_rs_dado => aux_data_outrs,
 			sai_rt_dado => aux_data_outrtE,
@@ -475,20 +479,24 @@ begin
 
 	instancia_muxDatatoReg : component mux21
 		port map(
-			dado_ent_0 => aux_alu_outW,
-			dado_ent_1 => aux_mem_outW,
-			sele_ent   => aux_datatoregW,
+			dado_ent_0 => aux_alu_outM,
+			dado_ent_1 => aux_mem_outM,
+			sele_ent   => aux_datatoregM,
 			dado_sai   => aux_data_in
 	   );
+
+     resetD <= reset or aux_flushD;
 
     --Pipeline
   instancia_regDecode : component reg_decode
     port map(                 
-      entrada_instrucao  => aux_meminstruncao,       
-      WE                 => aux_stallD,
+      entrada_instrucao  => aux_meminstruncao,    
+      pc_next_in         => aux_pc_next,    
+      WE                 => '1',
       clk                => clock,
-      reset              => reset,       
-      saida_instrucao    => aux_instruncao    
+      reset              => resetD,       
+      saida_instrucao    => aux_instruncao,
+      pc_next_out        => aux_pc_nextE    
     );
 
 
@@ -511,29 +519,29 @@ begin
       MemWriteM      => aux_data_writeM
     );
 		
-  instancia_regWriteback : component reg_writeback
-    port map(
-      addr_in         => aux_mem_outM,
-      data_in         => aux_alu_outM,
-      RegWriteM       => aux_reg_writeM,
-      MemtoRegM       => aux_datatoregM,
-      reg_dst_in      => aux_write_rdM,
-      WE              => '1',
-      clk             => clock,
-      reset           => reset,
-      addr_out        => aux_mem_outW,
-      data_out        => aux_alu_outW,
-      RegWriteW       => aux_reg_writeW,
-      MemtoRegW       => aux_datatoregW,
-      reg_dst_out     => aux_write_rdW 		
-    );
+  -- instancia_regWriteback : component reg_writeback
+  --   port map(
+  --     addr_in         => aux_mem_outM,
+  --     data_in         => aux_alu_outM,
+  --     RegWriteM       => aux_reg_writeM,
+  --     MemtoRegM       => aux_datatoregM,
+  --     reg_dst_in      => aux_write_rdM,
+  --     WE              => '1',
+  --     clk             => clock,
+  --     reset           => reset,
+  --     addr_out        => aux_mem_outW,
+  --     data_out        => aux_alu_outW,
+  --     RegWriteW       => aux_reg_writeW,
+  --     MemtoRegW       => aux_datatoregW,
+  --     reg_dst_out     => aux_write_rdW 		
+  --   );
 		
 		
 		instancia_ForwardAE : component mux31
 			port map(
 				dado_ent_0   => aux_data_outrs,
-				dado_ent_1   => aux_alu_outM,
-				dado_ent_2   => aux_alu_outW,
+				dado_ent_1   => aux_data_in,
+				dado_ent_2   => aux_data_in,
 				sele_ent     => aux_ctrl_forwardAE,     
 				dado_sai     => aux_forwardAE                     
 			);
@@ -541,8 +549,8 @@ begin
 		instancia_ForwardBE : component mux31
 			port map(
 				dado_ent_0   => aux_data_outrtE,
-				dado_ent_1   => aux_alu_outM,
-				dado_ent_2   => aux_alu_outW,
+				dado_ent_1   => aux_data_in,
+				dado_ent_2   => aux_data_in,
 				sele_ent     => aux_ctrl_forwardBE,     
 				dado_sai     => aux_forwardBE                      
 			);
@@ -552,14 +560,13 @@ begin
 				rs1E         => aux_read_rs,
 				rs2E         => aux_read_rt,
 				RegWriteM    => aux_reg_writeM, 
-				RegWriteW    => aux_reg_writeW,
+				RegWriteW    => aux_reg_writeM,
 				AddrRdM      => aux_write_rdM,
-				AddrRdW      => aux_write_rdW,
-				branch       => aux_branch,
+				AddrRdW      => aux_write_rdM,
+				branch       => aux_branch_ctrl,
 				forwardAE    => aux_ctrl_forwardAE,
 				forwardBE    => aux_ctrl_forwardBE,
-        stallD       => aux_stallD,
-        stallF       => aux_stallF
+        flushD       => aux_flushD
 			  );
 
 
