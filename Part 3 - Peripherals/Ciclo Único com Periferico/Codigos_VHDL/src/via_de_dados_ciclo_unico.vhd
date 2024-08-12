@@ -33,7 +33,30 @@ end entity via_de_dados_ciclo_unico;
 architecture comportamento of via_de_dados_ciclo_unico is
 
 	-- declare todos os componentes que serão necessários na sua via_de_dados_ciclo_unico a partir deste comentário
-	component pc is
+  component interrupt_ctl is
+    generic (
+      RESET_ACTIVE_LEVEL : std_logic := '1' --# Asynch. reset control level
+    );
+  port (
+    --# {{clocks|}}
+    Clock : in std_logic; --# System clock
+    Reset : in std_logic; --# Asynchronous reset
+    Enable: in std_logic; --# Enable interrupts
+
+    --# {{control|}}
+    Int_mask      : in std_logic_vector(1 downto 0);  --# Set bits correspond to active interrupts
+    Int_request   : in std_logic_vector(1 downto 0);  --# Controls used to activate new interrupts
+    Acknowledge   : in std_logic;                     --# Clear the active interupt
+    Clear_pending : in std_logic                      --# Clear all pending interrupts
+    
+    Pending       : out std_logic_vector(1 downto 0); --# Set bits indicate which interrupts are pending
+    Current       : out std_logic_vector(1 downto 0); --# Single set bit for the active interrupt
+    Interrupt     : out std_logic;                    --# Flag indicating when an interrupt is pending
+  );
+  end component;
+
+  
+  component pc is
 		generic (
 			pc_width : natural := 7
 		);

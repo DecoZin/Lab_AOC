@@ -1,152 +1,40 @@
-
----- This code was obtained from: 
----- https://github.com/kevinpt/vhdl-extras/blob/master/rtl/extras/interrupt_ctl.vhdl
---------------------------------------------------------------------
---  _    __ __  __ ____   __   =                                  --
--- | |  / // / / // __ \ / /   =                                  --
--- | | / // /_/ // / / // /    =    .__  |/ _/_  .__   .__    __  --
--- | |/ // __  // /_/ // /___  =   /___) |  /   /   ) /   )  (_ ` --
--- |___//_/ /_//_____//_____/  =  (___  /| (_  /     (___(_ (__)  --
---                           =====     /                          --
---                            ===                                 --
------------------------------  =  ----------------------------------
---# interrupt_ctl.vhdl - General purpose priority interrupt controller
---# Freely available from VHDL-extras (http://github.com/kevinpt/vhdl-extras)
---#
---# Copyright © 2014 Kevin Thibedeau
---# (kevin 'period' thibedeau 'at' gmail 'punto' com)
---#
---# Permission is hereby granted, free of charge, to any person obtaining a
---# copy of this software and associated documentation files (the "Software"),
---# to deal in the Software without restriction, including without limitation
---# the rights to use, copy, modify, merge, publish, distribute, sublicense,
---# and/or sell copies of the Software, and to permit persons to whom the
---# Software is furnished to do so, subject to the following conditions:
---#
---# The above copyright notice and this permission notice shall be included in
---# all copies or substantial portions of the Software.
---#
---# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
---# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
---# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
---# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
---# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
---# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
---# DEALINGS IN THE SOFTWARE.
---#
---# DEPENDENCIES: none
---#
---# DESCRIPTION:
---#  This package provides a general purpose interrupt controller that handles
---#  the management of multiple interrupt sources. It uses unconstrained arrays
---#  to specify the interrupt vector signals. It can thus be sized as needed to
---#  suit required number of interrupts.
---#
---#  The priority of the interrupts is fixed with the lowest index having the
---#  highest priority. You can use ascending or descending ranges for the
---#  control vectors. Multiple pending interrupts are serviced from highest to
---#  lowest priority. If a higher priority interrupt arrives when a lower
---#  priority interrupt is currently in service, the higher priority interrupt
---#  takes effect after the lower interrupt is acknowledged. If you disable a
---#  pending interrupt with its mask it will not return after reenabling the
---#  mask bit until the next interrupt arrives.
---#
---#  EXAMPLE USAGE:
---#
---#  -- Create an 8-bit interrupt controller
---#  signal int_mask, int_request, pending_int, current_int :
---#         std_ulogic_vector(7 downto 0);
---#  ...
---#  -- Disable interrupts 5, 6, and 7
---#  int_mask <= (7 downto 5 => '0', others => '1');
---#  ic: interrupt_ctl
---#    port map (
---#      Clock => clock,
---#      Reset => reset,
---#
---#      Int_mask    => int_mask,      -- Mask to enable/disable interrupts
---#      Int_request => int_request,   -- Interrupt sources
---#      Pending     => pending_int,   -- Current set of pending interrupts
---#      Current     => current_int,   -- Vector identifying which interrupt is active
---#
---#      Interrupt     => interrupt,     -- Signal when an interrupt is pending
---#      Acknowledge   => interrupt_ack, -- Acknowledge the interrupt has been serviced
---#      Clear_pending => clear_pending  -- Optional control to clear all
---#    );
---#
---#  -- Assemble interrupt sources into a request vector
---#  int_request <= (
---#    0 => source1, -- Highest priority
---#    1 => source2,
---#    2 => source3,
---#    3 => source4, -- Lowest priority
---#    others => '0'); -- The remaining sources are unused
---------------------------------------------------------------------
-
 library ieee;
 use ieee.std_logic_1164.all;
-
-package interrupt_ctl_pkg is
-
-
-  --## Priority interrupt controller.
-  component interrupt_ctl is
-    generic (
-      RESET_ACTIVE_LEVEL : std_ulogic := '1' --# Asynch. reset control level
-    );
-    port (
-      --# {{clocks|}}
-      Clock : in std_ulogic; --# System clock
-      Reset : in std_ulogic; --# Asynchronous reset
-
-      --# {{control|}}
-      Int_mask    : in std_ulogic_vector;  --# Set bits correspond to active interrupts
-      Int_request : in std_ulogic_vector;  --# Controls used to activate new interrupts
-      Pending     : out std_ulogic_vector; --# Set bits indicate which interrupts are pending
-      Current     : out std_ulogic_vector; --# Single set bit for the active interrupt
-
-      Interrupt     : out std_ulogic; --# Flag indicating when an interrupt is pending
-      Acknowledge   : in std_ulogic;  --# Clear the active interupt
-      Clear_pending : in std_ulogic   --# Clear all pending interrupts
-    );
-  end component;
-end package;
-
-
-library ieee;
-use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.math_real.all;
 
 entity interrupt_ctl is
   generic (
-    RESET_ACTIVE_LEVEL : std_ulogic := '1' --# Asynch. reset control level
+    RESET_ACTIVE_LEVEL : std_logic := '1' --# Asynch. reset control level
   );
   port (
     --# {{clocks|}}
-    Clock : in std_ulogic; --# System clock
-    Reset : in std_ulogic; --# Asynchronous reset
+    Clock : in std_logic; --# System clock
+    Reset : in std_logic; --# Asynchronous reset
+    Enable: in std_logic; --# Enable interrupts
 
     --# {{control|}}
-    Int_mask    : in std_ulogic_vector;  --# Set bits correspond to active interrupts
-    Int_request : in std_ulogic_vector;  --# Controls used to activate new interrupts
-    Pending     : out std_ulogic_vector; --# Set bits indicate which interrupts are pending
-    Current     : out std_ulogic_vector; --# Single set bit for the active interrupt
-
-    Interrupt     : out std_ulogic; --# Flag indicating when an interrupt is pending
-    Acknowledge   : in std_ulogic;  --# Clear the active interupt
-    Clear_pending : in std_ulogic   --# Clear all pending interrupts
+    Int_mask      : in std_logic_vector(1 downto 0);  --# Set bits correspond to active interrupts
+    Int_request   : in std_logic_vector(1 downto 0);  --# Controls used to activate new interrupts
+    Acknowledge   : in std_logic;  --# Clear the active interupt
+    Clear_pending : in std_logic   --# Clear all pending interrupts
+    
+    Pending       : out std_logic_vector(1 downto 0); --# Set bits indicate which interrupts are pending
+    Current       : out std_logic_vector(1 downto 0); --# Single set bit for the active interrupt
+    Interrupt     : out std_logic; --# Flag indicating when an interrupt is pending
   );
 end entity;
 
 architecture rtl of interrupt_ctl is
-  signal pending_loc, current_loc : std_ulogic_vector(Int_request'range);
-  signal interrupt_loc : std_ulogic;
+  signal pending_loc, current_loc : std_logic_vector(Int_request'range);
+  signal interrupt_loc : std_logic;
 
   -- Priority decoder
   -- Input is a vector of all pending interrupts. Result is a vector with just the
   -- highest priority interrupt bit set.
-  function priority_decode(pending : std_ulogic_vector) return std_ulogic_vector is
-    variable result : std_ulogic_vector(pending'range);
-    variable or_chain : std_ulogic;
+  function priority_decode(pending : std_logic_vector) return std_logic_vector is
+    variable result : std_logic_vector(pending'range);
+    variable or_chain : std_logic;
   begin
 
    -- Lowest bit has highest priority
@@ -168,8 +56,8 @@ architecture rtl of interrupt_ctl is
   end function;
 
   -- OR-reduce for compatability with VHDL-93
-  function or_reduce(vec: std_ulogic_vector) return std_ulogic is
-    variable or_chain : std_ulogic;
+  function or_reduce(vec: std_logic_vector) return std_logic is
+    variable or_chain : std_logic;
   begin
     or_chain := '0';
     for i in vec'range loop
@@ -182,8 +70,8 @@ architecture rtl of interrupt_ctl is
 begin
 
   ic: process(Clock, Reset) is
-    variable clear_int_n, pending_v, current_v : std_ulogic_vector(pending'range);
-    variable interrupt_v : std_ulogic;
+    variable clear_int_n, pending_v, current_v : std_logic_vector(pending'range);
+    variable interrupt_v : std_logic;
   begin
     assert Int_request'length >= 2
       report "Interrupt priority decoder must have at least two inputs"
