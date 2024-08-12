@@ -14,8 +14,8 @@ entity interrupt_ctl is
     Enable: in std_logic; --# Enable interrupts
 
     --# {{control|}}
-    Int_mask      : in std_logic_vector(1 downto 0);  --# Set bits correspond to active interrupts
-    Int_request   : in std_logic_vector(1 downto 0);  --# Controls used to activate new interrupts
+    IER : in std_logic_vector(1 downto 0);  --# Set bits correspond to active interrupts
+    IFR : in std_logic_vector(1 downto 0);  --# Controls used to activate new interrupts
     Acknowledge   : in std_logic;  --# Clear the active interupt
     Clear_pending : in std_logic   --# Clear all pending interrupts
     
@@ -26,7 +26,7 @@ entity interrupt_ctl is
 end entity;
 
 architecture rtl of interrupt_ctl is
-  signal pending_loc, current_loc : std_logic_vector(Int_request'range);
+  signal pending_loc, current_loc : std_logic_vector(IFR'range);
   signal interrupt_loc : std_logic;
 
   -- Priority decoder
@@ -73,18 +73,18 @@ begin
     variable clear_int_n, pending_v, current_v : std_logic_vector(pending'range);
     variable interrupt_v : std_logic;
   begin
-    assert Int_request'length >= 2
+    assert IFR'length >= 2
       report "Interrupt priority decoder must have at least two inputs"
       severity failure;
 
-    assert Int_mask'length = Int_request'length
-      report "Int_mask length must match Int_request" severity failure;
+    assert IER'length = IFR'length
+      report "IER length must match IFR" severity failure;
 
-    assert Pending'length = Int_request'length
-      report "Pending length must match Int_request" severity failure;
+    assert Pending'length = IFR'length
+      report "Pending length must match IFR" severity failure;
 
-    assert Current'length = Int_request'length
-      report "Current length must match Int_request" severity failure;
+    assert Current'length = IFR'length
+      report "Current length must match IFR" severity failure;
 
 
     if Reset = RESET_ACTIVE_LEVEL then
@@ -103,7 +103,7 @@ begin
 
       -- Keep track of pending interrupts while disabling inactive interrupts
       -- and clearing acknowledged interrupts.
-      pending_v := (Int_request or pending_loc) and Int_mask and clear_int_n;
+      pending_v := (IFR or pending_loc) and IER and clear_int_n;
       pending_loc <= pending_v;
 
       -- Determine the active interrupt from among those pending

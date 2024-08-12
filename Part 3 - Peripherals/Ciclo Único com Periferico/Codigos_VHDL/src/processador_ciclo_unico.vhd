@@ -18,6 +18,10 @@ entity processador_ciclo_unico is
 		-- Chave_enter						: in std_logic ;
 		pc_out                : out std_logic_vector(6 downto 0);
 		Leds_vermelhos_saida	: out std_logic_vector(DATA_WIDTH - 1 downto 0);
+		Teclado_data          : in std_logic_vector(31 downto 0); -- Sinal vindo direto do teclado
+		IER                   : in std_logic_vector(1 downto 0);
+		IFR                   : in std_logic_vector(1 downto 0);
+    Acknowledge           : in std_logic;
 		Chave_reset						: in std_logic;
 		Clock									: in std_logic
 	);
@@ -36,16 +40,20 @@ architecture comportamento of processador_ciclo_unico is
       ula_ctrl_width    : natural := 5;		-- tamanho da linha de controle da ULA
       instr_width       : natural := 32		-- tamanho da instrução em bits
 		);
-		port (
-			-- declare todas as portas da sua via_dados_ciclo_unico aqui.
-			clock     : in std_logic;
-			reset     : in std_logic;
-			controle  : in std_logic_vector(dp_ctrl_bus_width - 1 downto 0);
-			alu_ctrl  : in std_logic_vector((alu_ctrl_width-1) downto 0);
-			instrucao : out std_logic_vector(instr_width - 1 downto 0);
-			pc_out    : out std_logic_vector(pc_width - 1 downto 0);
-			saida     : out std_logic_vector(data_width - 1 downto 0)
-		);
+	port (
+		-- declare todas as portas da sua via_dados_ciclo_unico aqui.
+		clock         : in std_logic;
+		reset         : in std_logic;
+		controle      : in std_logic_vector(dp_ctrl_bus_width - 1 downto 0);
+		alu_ctrl      : in std_logic_vector((alu_ctrl_width-1) downto 0);
+		Teclado_data  : in std_logic_vector(31 downto 0); -- Sinal vindo direto do teclado
+		IER           : in std_logic_vector(1 downto 0);
+		IFR           : in std_logic_vector(1 downto 0);
+    Acknowledge   : in std_logic;
+		instrucao     : out std_logic_vector(instr_width - 1 downto 0);
+		pc_out        : out std_logic_vector(pc_width - 1 downto 0);
+		saida         : out std_logic_vector(data_width - 1 downto 0)
+	);
 	end component;
 
 	component unidade_de_controle_ciclo_unico is
@@ -75,6 +83,10 @@ architecture comportamento of processador_ciclo_unico is
 	signal aux_controle  : std_logic_vector(DP_CTRL_BUS_WIDTH - 1 downto 0);
 	signal aux_alu_controle  : std_logic_vector(ALU_CTRL_WIDTH - 1 downto 0);
 	
+	signal aux_Teclado_data : std_logic_vector(31 downto 0);
+	signal aux_IER          : std_logic_vector(1 downto 0);
+	signal aux_IFR          : std_logic_vector(1 downto 0);
+	
 
 begin
 	-- A partir deste comentário instancie todos o componentes que serão usados no seu processador_ciclo_unico.
@@ -96,12 +108,16 @@ begin
 	instancia_via_de_dados_ciclo_unico : via_de_dados_ciclo_unico
 	port map(
 		-- declare todas as portas da sua via_dados_ciclo_unico aqui.
-		clock     => Clock,
-		reset     => Chave_reset,
-		controle  => aux_controle,
-		alu_ctrl  => aux_alu_controle,
-		instrucao => aux_instrucao,
-		pc_out    => pc_out,
-		saida     => Leds_vermelhos_saida
+		clock         => Clock,
+		reset         => Chave_reset,
+		controle      => aux_controle,
+		alu_ctrl      => aux_alu_controle,
+		instrucao     => aux_instrucao,
+    Teclado_data  => Teclado_data,
+    IER           => IER,
+    IFR           => IFR,
+    Acknowledge   => Acknowledge,
+		pc_out        => pc_out,
+		saida         => Leds_vermelhos_saida
 	);
 end comportamento;

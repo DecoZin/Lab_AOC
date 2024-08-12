@@ -17,11 +17,15 @@ architecture estimulos of tb_processador_ciclo_unico is
   generic (
 		data_width  : natural := 32	-- tamanho do dado em bits
   );
-		port (
+	port (
 		-- Chaves_entrada				: in std_logic_vector(DATA_WIDTH-1 downto 0);
 		-- Chave_enter						: in std_logic ;
 		pc_out                : out std_logic_vector(6 downto 0);
 		Leds_vermelhos_saida	: out std_logic_vector(DATA_WIDTH - 1 downto 0);
+		Teclado_data          : in std_logic_vector(31 downto 0); -- Sinal vindo direto do teclado
+		IER                   : in std_logic_vector(1 downto 0);
+		IFR                   : in std_logic_vector(1 downto 0);
+    Acknowledge           : in std_logic;
 		Chave_reset						: in std_logic;
 		Clock									: in std_logic
 	);
@@ -30,8 +34,12 @@ architecture estimulos of tb_processador_ciclo_unico is
   constant  data_width  : natural := 32;	-- tamanho do dado em bits
 
 	signal rst : std_logic := '1';
+	signal aux_Acknowledge : std_logic := '0';
   signal aux_pc_out   : std_logic_vector(6 downto 0) ;
   signal aux_leds_out : std_logic_vector(DATA_WIDTH -1 downto 0) ;  
+  signal aux_Teclado_data : std_logic_vector(31 downto 0) := (others => '0') ;  
+  signal aux_IER          : std_logic_vector( 1 downto 0) := (others => '0') ;  
+  signal aux_IFR          : std_logic_vector( 1 downto 0) := (others => '0') ;  
 
 	-- Definição das configurações de clock				
   constant clk_period : time := 10 ns;
@@ -44,6 +52,10 @@ begin
   port map(
     pc_out => aux_pc_out, 
     Leds_vermelhos_saida => aux_leds_out, 
+    Teclado_data => aux_Teclado_data,
+    IER => aux_IER,
+    IFR => aux_IFR,
+    Acknowledge => aux_Acknowledge,
     Clock => clk, 
     Chave_reset => rst
   );

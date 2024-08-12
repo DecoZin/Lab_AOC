@@ -27,3 +27,6 @@ abs  x18,   x1;      # x18 = abs(x1)
 conj x19,   x2;      # x19 = conj(x2)
 conj x20,   x1;      # x20 = conj(x1)
 bgt  x17,  x18, -13; # if x2 >  x21 then jmp to inst addi address
+
+addi x1, zero, 2;
+sw zero, 0(zero);

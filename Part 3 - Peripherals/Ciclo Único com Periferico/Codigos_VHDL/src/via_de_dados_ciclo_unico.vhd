@@ -20,38 +20,53 @@ entity via_de_dados_ciclo_unico is
 	);
 	port (
 		-- declare todas as portas da sua via_dados_ciclo_unico aqui.
-		clock     : in std_logic;
-		reset     : in std_logic;
-		controle  : in std_logic_vector(dp_ctrl_bus_width - 1 downto 0);
-		alu_ctrl  : in std_logic_vector((alu_ctrl_width-1) downto 0);
-		instrucao : out std_logic_vector(instr_width - 1 downto 0);
-		pc_out    : out std_logic_vector(pc_width - 1 downto 0);
-		saida     : out std_logic_vector(data_width - 1 downto 0)
+		clock         : in  std_logic;
+		reset         : in  std_logic;
+		controle      : in  std_logic_vector(dp_ctrl_bus_width - 1 downto 0);
+		alu_ctrl      : in  std_logic_vector(alu_ctrl_width    - 1 downto 0);
+		Teclado_data  : in  std_logic_vector(31 downto 0); -- Sinal vindo direto do teclado
+		IER           : in  std_logic_vector( 1 downto 0);
+		IFR           : in  std_logic_vector (1 downto 0);
+    Acknowledge   : in  std_logic;
+		instrucao     : out std_logic_vector(instr_width - 1 downto 0);
+		pc_out        : out std_logic_vector(pc_width    - 1 downto 0);
+		saida         : out std_logic_vector(data_width  - 1 downto 0)
 	);
 end entity via_de_dados_ciclo_unico;
 
 architecture comportamento of via_de_dados_ciclo_unico is
 
 	-- declare todos os componentes que serão necessários na sua via_de_dados_ciclo_unico a partir deste comentário
+ component registrador is
+    generic (
+        largura_dado : natural := 32
+    );
+    port (
+        entrada_dados  : in std_logic_vector((largura_dado - 1) downto 0);
+        WE, clk, reset : in std_logic;
+        saida_dados    : out std_logic_vector((largura_dado - 1) downto 0)
+    );
+ end component;
+ 
   component interrupt_ctl is
     generic (
       RESET_ACTIVE_LEVEL : std_logic := '1' --# Asynch. reset control level
     );
-  port (
+    port (
     --# {{clocks|}}
     Clock : in std_logic; --# System clock
     Reset : in std_logic; --# Asynchronous reset
     Enable: in std_logic; --# Enable interrupts
 
-    --# {{control|}}
-    Int_mask      : in std_logic_vector(1 downto 0);  --# Set bits correspond to active interrupts
-    Int_request   : in std_logic_vector(1 downto 0);  --# Controls used to activate new interrupts
+    --# {{control|}}                 (Teclado e GPIO)
+    IER           : in std_logic_vector(1 downto 0);  --# Set bits correspond to active interrupts
+    IFR           : in std_logic_vector(1 downto 0);  --# Controls used to activate new interrupts
     Acknowledge   : in std_logic;                     --# Clear the active interupt
-    Clear_pending : in std_logic                      --# Clear all pending interrupts
+    Clear_pending : in std_logic;                      --# Clear all pending interrupts
     
     Pending       : out std_logic_vector(1 downto 0); --# Set bits indicate which interrupts are pending
     Current       : out std_logic_vector(1 downto 0); --# Single set bit for the active interrupt
-    Interrupt     : out std_logic;                    --# Flag indicating when an interrupt is pending
+    Interrupt     : out std_logic                    --# Flag indicating when an interrupt is pending
   );
   end component;
 
@@ -120,6 +135,17 @@ architecture comportamento of via_de_dados_ciclo_unico is
 		);
 	end component;
 
+  component mux41 is
+    generic (
+        largura_dado : natural := 32
+    );
+    port (
+        dado_ent_0, dado_ent_1, dado_ent_2, dado_ent_3 : in std_logic_vector((largura_dado - 1) downto 0);
+        sele_ent                                       : in std_logic_vector(1 downto 0);
+        dado_sai                                       : out std_logic_vector((largura_dado - 1) downto 0)
+    );
+  end component;
+
 	component and_port is
 		port (
 			entrada1   :   in std_logic;
@@ -176,6 +202,7 @@ architecture comportamento of via_de_dados_ciclo_unico is
 	-- Veja os exemplos abaixo:
 
 	signal aux_pc_jump    : std_logic_vector(pc_width - 1 downto 0);
+	signal aux_pc_plus1    : std_logic_vector(pc_width - 1 downto 0);
 	signal aux_pc_next    : std_logic_vector(pc_width - 1 downto 0);
 	signal aux_pc_mux     : std_logic_vector(pc_width - 1 downto 0);
 	signal aux_pc_reg     : std_logic_vector(pc_width - 1 downto 0);
@@ -197,6 +224,7 @@ architecture comportamento of via_de_dados_ciclo_unico is
 	signal aux_reg_write  : std_logic;
 	signal aux_data_write : std_logic;
 
+	signal aux_alu1_in    : std_logic_vector(data_width - 1 downto 0);
 	signal aux_alu2_in    : std_logic_vector(data_width - 1 downto 0);
 	signal aux_alu_out    : std_logic_vector(data_width - 1 downto 0);
 	signal aux_ALUCtrl    : std_logic_vector(ula_ctrl_width - 1 downto 0);
@@ -211,7 +239,14 @@ architecture comportamento of via_de_dados_ciclo_unico is
 	signal aux_branch_ctrl: std_logic;
 	signal aux_branch     : std_logic;
 	signal aux_we_pc      : std_logic;
-
+  
+	signal aux_WE_EPC        : std_logic;
+  signal aux_Current       : std_logic_vector(1 downto 0);
+  signal aux_teclado_regin : std_logic_vector(31 downto 0);
+  signal aux_teclado_regout: std_logic_vector(31 downto 0);
+  signal aux_addr_GPIO     : std_logic_vector( 6 downto 0) := "1111110";
+  signal aux_addr_TECLADO  : std_logic_vector( 6 downto 0) := "1111111";
+  signal aux_open  : std_logic_vector( 6 downto 0) := "1111111";
 
 begin
 
@@ -238,6 +273,8 @@ begin
 	saida		<= aux_alu_out;
 	pc_out	<= aux_pc_out;
 
+  aux_teclado_regin <= Teclado_data;
+
 	-- A partir deste comentário instancie todos o componentes que serão usados na sua via_de_dados_ciclo_unico.
 	-- A instanciação do componente deve começar com um nome que você deve atribuir para a referida instancia seguido de : e seguido do nome
 	-- que você atribuiu ao componente.
@@ -245,19 +282,51 @@ begin
 	-- Para fazer o port map, na parte da esquerda da atribuição "=>" deverá vir o nome de origem da porta do componente e na parte direita da
 	-- atribuição deve aparecer um dos sinais ("fios") que você definiu anteriormente, ou uma das entradas da entidade via_de_dados_ciclo_unico,
 	-- ou ainda uma das saídas da entidade via_de_dados_ciclo_unico.
-	-- Veja os exemplos de instanciação a seguir:
+	-- Veja os exemplos de instanciação a seguir:    
 
-	instancia_mux1 : component mux21
-		generic map(
-			largura_dado => 7
-		)
-		port map(
-			dado_ent_0 => aux_pc_next,
-			dado_ent_1 => aux_pc_jump,
-			sele_ent   => aux_branch_ctrl,
-			dado_sai   => aux_pc_mux
-		);
-	
+  intancia_interrupt_ctrl: component interrupt_ctl
+    generic map (
+      RESET_ACTIVE_LEVEL => '1'
+    )
+    port map (
+      Clock   => clock,
+      Reset   => reset,
+      Enable   => '1',
+
+      IER           => IER,
+      IFR           => IFR,
+      Acknowledge   => Acknowledge,
+      Clear_pending => reset,
+
+      Pending   => open,
+      Current   => aux_Current,
+      Interrupt => aux_WE_EPC
+    );
+
+    intancia_muxPCnext: component mux41
+      generic map (
+        largura_dado => 7
+      )
+      port map (
+        dado_ent_0 => aux_pc_plus1,
+        dado_ent_1 => aux_addr_GPIO,  
+        dado_ent_2 => aux_addr_TECLADO,  
+        dado_ent_3 => aux_open,  
+        sele_ent   => aux_Current,
+        dado_sai   => aux_pc_next
+      );
+  
+    instancia_mux1 : component mux21
+      generic map(
+        largura_dado => 7
+      )
+      port map(
+        dado_ent_0 => aux_pc_next,
+        dado_ent_1 => aux_pc_jump,
+        sele_ent   => aux_branch_ctrl,
+        dado_sai   => aux_pc_mux
+      );
+    
 	aux_pc_reg <= aux_data_outrs (6 downto 0);
 
 	instancia_mux2 : component mux21
@@ -270,6 +339,18 @@ begin
 			sele_ent   => aux_jumpenable,
 			dado_sai   => aux_novo_pc
 		);
+
+  intancia_EPC: component registrador
+  generic map(
+    largura_dado => 7
+  )
+  port map(
+    entrada_dados => aux_teclado_regin,
+    WE            => '1',
+    clk           => clock,
+    reset         => reset,
+    saida_dados   => aux_teclado_regout
+  );
 
 	instancia_pc : component pc
 		port map(
@@ -284,12 +365,12 @@ begin
 		port map(
 			entrada_a => aux_pc_out,
 			entrada_b => "0000001",
-			saida			=> aux_pc_next
+			saida			=> aux_pc_plus1
 		);
 
 	instancia_somadorBranch : component somador
 		port map(
-			entrada_a => aux_pc_next,
+			entrada_a => aux_pc_plus1,
 			entrada_b => aux_imm(6 downto 0),
 			saida			=> aux_pc_jump
 		);
@@ -330,7 +411,27 @@ begin
 			saida      => aux_imm_ext
 		);
 
-	instancia_muxALU : component mux21
+  intancia_teclado_reg: component registrador
+    port map(
+      entrada_dados => aux_teclado_regin,
+      WE            => '1',
+      clk           => clock,
+      reset         => reset,
+      saida_dados   => aux_teclado_regout
+    );
+
+  instancia_mux_rs : component mux21
+    generic map(
+      largura_dado => 32
+    )
+    port map(
+      dado_ent_0 => aux_data_outrs,
+      dado_ent_1 => aux_teclado_regout,
+      sele_ent   => aux_Current(1),
+      dado_sai   => aux_alu1_in
+    );
+
+	instancia_mux_rt : component mux21
 		generic map(
 			largura_dado => 32
 		)
@@ -343,10 +444,10 @@ begin
 
 	instancia_ula1 : component ula
   		port map(
-			entrada_a => aux_data_outrs,
+			entrada_a => aux_alu1_in,
 			entrada_b => aux_alu2_in,
 			seletor	  => aux_ALUCtrl,
-			saida	  => aux_alu_out
+			saida	    => aux_alu_out
  		);
 
 	aux_alu_outb <= aux_alu_out(0);
