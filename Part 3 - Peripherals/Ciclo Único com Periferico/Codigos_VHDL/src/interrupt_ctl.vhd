@@ -17,11 +17,11 @@ entity interrupt_ctl is
     IER : in std_logic_vector(1 downto 0);  --# Set bits correspond to active interrupts
     IFR : in std_logic_vector(1 downto 0);  --# Controls used to activate new interrupts
     Acknowledge   : in std_logic;  --# Clear the active interupt
-    Clear_pending : in std_logic   --# Clear all pending interrupts
+    Clear_pending : in std_logic;   --# Clear all pending interrupts
     
     Pending       : out std_logic_vector(1 downto 0); --# Set bits indicate which interrupts are pending
     Current       : out std_logic_vector(1 downto 0); --# Single set bit for the active interrupt
-    Interrupt     : out std_logic; --# Flag indicating when an interrupt is pending
+    Interrupt     : out std_logic --# Flag indicating when an interrupt is pending
   );
 end entity;
 
