@@ -49,25 +49,25 @@ architecture comportamento of via_de_dados_ciclo_unico is
  end component;
  
   component interrupt_ctl is
-    generic (
-      RESET_ACTIVE_LEVEL : std_logic := '1' --# Asynch. reset control level
-    );
-    port (
-    --# {{clocks|}}
-    Clock : in std_logic; --# System clock
-    Reset : in std_logic; --# Asynchronous reset
-    Enable: in std_logic; --# Enable interrupts
-
-    --# {{control|}}                 (Teclado e GPIO)
-    IER           : in std_logic_vector(1 downto 0);  --# Set bits correspond to active interrupts
-    IFR           : in std_logic_vector(1 downto 0);  --# Controls used to activate new interrupts
-    Acknowledge   : in std_logic;                     --# Clear the active interupt
-    Clear_pending : in std_logic;                      --# Clear all pending interrupts
-    
-    Pending       : out std_logic_vector(1 downto 0); --# Set bits indicate which interrupts are pending
-    Current       : out std_logic_vector(1 downto 0); --# Single set bit for the active interrupt
-    Interrupt     : out std_logic                    --# Flag indicating when an interrupt is pending
-  );
+	generic (
+		RESET_ACTIVE_LEVEL : std_logic := '1' --# Asynch. reset control level
+	  );
+	  port (
+		--# {{clocks|}}
+		Clock : in std_logic; --# System clock
+		Reset : in std_logic; --# Asynchronous reset
+		Enable: in std_logic; --# Enable interrupts
+	
+		--# {{control|}}
+		IER : in std_logic_vector(1 downto 0);  --# Set bits correspond to active interrupts
+		IFR : in std_logic_vector(1 downto 0);  --# Controls used to activate new interrupts
+		Acknowledge   : in std_logic;  --# Clear the active interupt
+		Clear_pending : in std_logic;   --# Clear all pending interrupts
+		
+		Pending       : out std_logic_vector(1 downto 0); --# Set bits indicate which interrupts are pending
+		Current       : out std_logic_vector(1 downto 0); --# Single set bit for the active interrupt
+		Interrupt     : out std_logic --# Flag indicating when an interrupt is pending
+	  );
   end component;
 
   
@@ -284,26 +284,26 @@ begin
 	-- ou ainda uma das saídas da entidade via_de_dados_ciclo_unico.
 	-- Veja os exemplos de instanciação a seguir:    
 
-  intancia_interrupt_ctrl: component interrupt_ctl
-    generic map (
-      RESET_ACTIVE_LEVEL => '1'
-    )
-    port map (
-      Clock   => clock,
-      Reset   => reset,
-      Enable   => '1',
+  	instancia_interrupt_ctrl: component interrupt_ctl
+    	generic map (
+    	  RESET_ACTIVE_LEVEL => '1'
+    	)
+    	port map (
+    	  Clock   => clock,
+    	  Reset   => reset,
+    	  Enable  => '1',
 
-      IER           => IER,
-      IFR           => IFR,
-      Acknowledge   => Acknowledge,
-      Clear_pending => reset,
+    	  IER           => IER,
+    	  IFR           => IFR,
+    	  Acknowledge   => Acknowledge,
+    	  Clear_pending => reset,
 
-      Pending   => open,
-      Current   => aux_Current,
-      Interrupt => aux_WE_EPC
+    	  Pending   => open,
+    	  Current   => aux_Current,
+    	  Interrupt => aux_WE_EPC
     );
 
-    intancia_muxPCnext: component mux41
+    instancia_muxPCnext: component mux41
       generic map (
         largura_dado => 7
       )
