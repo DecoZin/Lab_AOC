@@ -345,11 +345,11 @@ begin
     largura_dado => 7
   )
   port map(
-    entrada_dados => aux_teclado_regin,
+    entrada_dados => aux_pc_plus1,
     WE            => '1',
     clk           => clock,
     reset         => reset,
-    saida_dados   => aux_teclado_regout
+    saida_dados   => aux_pc_next
   );
 
 	instancia_pc : component pc
