@@ -27,7 +27,7 @@ entity via_de_dados_ciclo_unico is
 		Teclado_data  : in  std_logic_vector(31 downto 0); -- Sinal vindo direto do teclado
 		IER           : in  std_logic_vector( 1 downto 0);
 		IFR           : in  std_logic_vector (1 downto 0);
-    Acknowledge   : in  std_logic;
+    	Acknowledge   : in  std_logic;
 		instrucao     : out std_logic_vector(instr_width - 1 downto 0);
 		pc_out        : out std_logic_vector(pc_width    - 1 downto 0);
 		saida         : out std_logic_vector(data_width  - 1 downto 0)
@@ -203,6 +203,7 @@ architecture comportamento of via_de_dados_ciclo_unico is
 
 	signal aux_pc_jump    : std_logic_vector(pc_width - 1 downto 0);
 	signal aux_pc_plus1    : std_logic_vector(pc_width - 1 downto 0);
+	signal aux_pc_plus2    : std_logic_vector(pc_width - 1 downto 0);
 	signal aux_pc_next    : std_logic_vector(pc_width - 1 downto 0);
 	signal aux_pc_mux     : std_logic_vector(pc_width - 1 downto 0);
 	signal aux_pc_reg     : std_logic_vector(pc_width - 1 downto 0);
@@ -308,7 +309,7 @@ begin
         largura_dado => 7
       )
       port map (
-        dado_ent_0 => aux_pc_plus1,
+        dado_ent_0 => aux_pc_plus2,
         dado_ent_1 => aux_addr_GPIO,  
         dado_ent_2 => aux_addr_TECLADO,  
         dado_ent_3 => aux_open,  
@@ -349,7 +350,7 @@ begin
     WE            => '1',
     clk           => clock,
     reset         => reset,
-    saida_dados   => aux_pc_next
+    saida_dados   => aux_pc_plus2
   );
 
 	instancia_pc : component pc
